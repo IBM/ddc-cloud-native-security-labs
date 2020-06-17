@@ -513,4 +513,4 @@ You should then see the info that you edited in the file earlier.
 ## Conclusion
 In this lab we have explored building our own custom s2i images for building containerized application from source code. We utilized a multi stage s2i process that separated the build environment from the runtime environment which allowed for us to have a slimmer application image. Then, we deployed the application as a traditional Kubernetes deployment. Lastly, we explored how to automate the building and deploying of the application using OpenShift build and deployment configs.
 
-Go back to [summary](../SUMMARY.md)
+1. Go back to the [Summary](../SUMMARY.md).

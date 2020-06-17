@@ -780,3 +780,4 @@ To verify MongoDB deployment,
 
     ![COS data files](../.gitbook/images/ibmcloud-cos-bucket-datafiles.png)
 
+1. Continue to [Lab 3](../lab-03/README.md) or go back to the [Summary](../SUMMARY.md).

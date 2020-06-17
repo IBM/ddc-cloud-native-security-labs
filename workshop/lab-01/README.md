@@ -846,3 +846,5 @@ To clean up the created resources for the `helloworld` application run the follo
 $ kubectl delete deploy helloworld
 $ kubectl delete svc helloworld
 ```
+
+1. Continue to [Lab 2](../lab-02/README.md) or go back to the [Summary](../SUMMARY.md).

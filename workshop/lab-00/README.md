@@ -31,4 +31,4 @@ For the hands-on labs included in the conference, you can use a free cluster tha
 
 	![Cloud Shell](../.gitbook/images/cloud-shell.png)
 
-1. You should now be read to start with [Lab 1](../lab-01/README.md),
+1. You should now be read to start with [Lab 1](../lab-01/README.md) or go back to the [Summary](../SUMMARY.md).
