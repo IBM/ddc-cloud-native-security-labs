@@ -1,0 +1,42 @@
+# Also ignore
+
+.mvn
+gradle/
+.springBeans
+build.gradle
+gradlew
+gradlew.bat
+mvnw
+mvnw.cmd
+settings.gradle
+
+# Operating System Files
+
+*.DS_Store
+Thumbs.db
+
+# Build Files #
+
+bin
+target
+build/
+.gradle
+
+# Eclipse Project Files #
+
+.classpath
+.project
+.settings
+
+# IntelliJ IDEA Files #
+
+*.iml
+*.ipr
+*.iws
+*.idea
+
+# Test files
+
+accessingdataneo4j.db
+dependency-reduced-pom.xml
+README.html
