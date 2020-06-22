@@ -201,9 +201,18 @@ In the following steps we will be using two deployment strategies:
 Now that we have the application running locally and have verified that it works, let's deploy it to an OpenShift environment.
 
 1. Log in with your OpenShift Cluster.
-  
-   1. Open your `OpenShift web console` and from the profile dropdown `Copy Login Command`.
-   1. Paste the login command to login, e.g.
+
+    1. In preparation of this lab, you claimed a cluster that was created for you, and which is now available via your IBM Cloud dashboard,
+    1. Browse to your assigned OpenShift cluster Overview page,
+    1. From the top right, open your `OpenShift web console` 
+
+    ![Open OpenShift Web Console](../.gitbook/images/lab-03/open-openshift-console.png)
+
+    1. In the OpenShift Web Console, from the profile dropdown click  `Copy Login Command`.
+
+    ![Copy Login Command](../.gitbook/images/lab-03/copy-login-command.png)
+
+    1. Paste the login command to login, e.g.
 
     ```bash
     oc login --token=<login-token> --server=https://<cluster-subdomain>:<service-port>
@@ -221,19 +230,19 @@ For this method, we will deploy our application by creating a kubernetes deploym
     docker tag authors $IMAGE
     ```
 
-1. Push the image that we built locally using s2i to the OpenShift image registry.
+2. Push the image that we built locally using s2i to the OpenShift image registry.
 
     ```bash
     docker push $IMAGE
     ```
 
-1. Go back to the root folder,
+3. Go back to the root folder,
 
     ```bash
     cd $ROOT_FOLDER
     ```
 
-1. Review the `application.yaml` file,
+4. Review the `application.yaml` file,
 
     ```bash
     cat application.yaml
@@ -245,31 +254,31 @@ For this method, we will deploy our application by creating a kubernetes deploym
     sed -i "s|APPLICATION_IMAGE|$IMAGE|" application.yaml
     ```
 
-1. Apply the `application.yaml` file using the `oc` cli to create our Deployment, Service, and Route.
+5. Apply the `application.yaml` file using the `oc` cli to create our Deployment, Service, and Route.
 
     ```bash
     oc apply -f application.yaml
     ```
 
-1. Now let's visit the deployed application. Run the following to get the route to access the application.
+6. Now let's visit the deployed application. Run the following to get the route to access the application.
 
     ```bash
     oc get routes -l app=authors -o go-template='{{range .items}}{{.spec.host}}{{end}}'
     ```
 
-1. Copy and paste the output of the previous command to set a variable $APP_URL,
+7. Copy and paste the output of the previous command to set a variable $APP_URL,
 
     ```
     APP_URL=<get-routes-output>
     ```
 
-1. Test the application using curl
+8. Test the application using curl
 
     ```
     curl -X GET "http://$APP_URL/api/v1/getauthor" -H "accept: application/json"
     ```
 
-1. Or use the route to your app and paste it into your web browser and add the following to the end of the route:
+9. Or use the route to your app and paste it into your web browser and add the following to the end of the route:
 
     ```bash
     /openapi/ui
