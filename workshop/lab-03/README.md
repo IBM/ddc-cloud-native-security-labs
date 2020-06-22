@@ -206,11 +206,11 @@ Now that we have the application running locally and have verified that it works
     1. Browse to your assigned OpenShift cluster Overview page,
     1. From the top right, open your `OpenShift web console` 
 
-    ![Open OpenShift Web Console](../.gitbook/images/lab-03/open-openshift-console.png)
+        ![Open OpenShift Web Console](../.gitbook/images/lab-03/open-openshift-console.png)
 
     1. In the OpenShift Web Console, from the profile dropdown click  `Copy Login Command`.
 
-    ![Copy Login Command](../.gitbook/images/lab-03/copy-login-command.png)
+        ![Copy Login Command](../.gitbook/images/lab-03/copy-login-command.png)
 
     1. Paste the login command to login, e.g.
 
