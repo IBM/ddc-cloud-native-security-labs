@@ -290,6 +290,8 @@ For this method, we will deploy our application by creating a kubernetes deploym
     authors-route-default...appdomain.cloud/openapi/ui
     ```
 
+    ![Authors OpenAPI UI](../.gitbook/images/lab-03/authors-openapi-ui.png)
+
 It sometimes takes a minute to fully deploy so if you get a message about the application not being available, try again.
 
 #### Using Templates, BuildConfigs, and DeploymentConfigs
