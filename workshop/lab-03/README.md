@@ -16,6 +16,7 @@ However, with compiled languages like Java, the build and runtime processes can 
 This lab will focus on the second scenario of using a builder image along with a runtime image.
 
 ![runtime image flow](../.gitbook/images/lab-03/runtime-image-flow.png)
+
 (source: https://github.com/openshift/source-to-image/blob/master/docs/runtime_image.md)
 
 ### Prerequisites
