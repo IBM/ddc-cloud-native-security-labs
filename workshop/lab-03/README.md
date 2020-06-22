@@ -4,7 +4,7 @@ This project contains a Source-to-Image (S2I) builder image and a S2I runtime im
 
 [Source-to-Image](https://github.com/openshift/source-to-image) (S2I) is an open source toolkit for building reproducible container images from source code. S2I produces ready-to-run images by injecting source code into a container image.
 
-The Open Liberty builder can be used in two different environments:
+The Open Liberty builder in this lab can be used in two different environments:
 
 * Local Docker runtime via 's2i',
 * Deployment to OpenShift'.
@@ -31,18 +31,18 @@ The following prerequisites are needed:
 
 ### Setup
 
-For this lab we will need to use a docker-in-docker environment so that we can build our images. For this scenario we will be using the [IBM Skills Network](https://labs.cognitiveclass.ai/).
+For this lab we will need to use a docker-in-docker environment so that we can build our images. For this scenario we will be using the labs client of [IBM Skills Network](https://labs.cognitiveclass.ai/).
 
-1. Follow the instructions [here](./skillsNetwork.md) to create your environment.
+1. Follow the instructions [here](skillsNetwork.md) to create your client environment.
 
-1. Clone this repository locally and navigate to the newly cloned directory.
+2. Clone this repository locally and navigate to the newly cloned directory.
 
     ```bash
     git clone https://github.com/IBM/s2i-open-liberty-workshop.git -b conference
     cd s2i-open-liberty-workshop
     ```
 
-1. Then we need to install Source to Image. Run the following command to start the installation script.
+3. Then we need to install Source to Image. Run the following command to start the installation script.
 
 ```bash
 chmod +x setup.sh
