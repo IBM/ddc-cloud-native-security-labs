@@ -394,7 +394,7 @@ Both objects are similar and will accomplish the same goals however with deploym
     open-liberty-builder-1-build          0/1     Completed   0          3h5m
     ```
 
-    You can also view these on the OpenShift dashboard if you navigate to `Workloads` > `Pods` and look for your new pod. It should start with `authors2-`.
+    You can also view these on the OpenShift dashboard if you navigate to `Workloads` > `Pods` and look for your new pod. Make sure you are in your personal project and not in `default`. The pod name should start with `authors2-`.
 
 1. Once you have verified that the new pod is running, enter the following command to view the application routes.
 
