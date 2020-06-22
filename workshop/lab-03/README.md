@@ -35,19 +35,19 @@ For this lab we will need to use a docker-in-docker environment so that we can b
 
 1. Follow the instructions [here](skillsNetwork.md) to create your client environment.
 
-2. Clone this repository locally and navigate to the newly cloned directory.
+1. Clone this repository locally and navigate to the newly cloned directory.
 
     ```bash
     git clone https://github.com/IBM/s2i-open-liberty-workshop.git -b conference
     cd s2i-open-liberty-workshop
     ```
 
-3. Then we need to install Source to Image. Run the following command to start the installation script.
+1. Then we need to install Source to Image. Run the following command to start the installation script.
 
-```bash
-chmod +x setup.sh
-./setup.sh
-```
+    ```bash
+    chmod +x setup.sh
+    ./setup.sh
+    ```
 
 1. To make things easier, we are going to set some environment variables that we can reuse in later commands.
 
