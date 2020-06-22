@@ -100,10 +100,12 @@ In this section we will create the first of our two S2I images. This image will 
     docker build -t $DOCKER_USERNAME/s2i-open-liberty-builder:0.1.0 .
     ```
 
-1. Log in to your Dockerhub account. After running the below command, you will be asked to enter your docker username and password.
+    **Note**: Don't miss the `.` for the current directory at the end of the `docker build` command,
+
+1. Log in to your Dockerhub account. After running the below command, you will be asked to enter your docker password.
 
     ```bash
-    docker login
+    docker login -u $DOCKER_USERNAME
     ```
 
 1. Push the builder image out to Docker hub.
@@ -135,6 +137,8 @@ In this section you will create the second of our two S2I images. The runtime im
     ```
     docker build -t $DOCKER_USERNAME/s2i-open-liberty:0.1.0 .
     ```
+
+    **Note**: Don't miss the `.` for the current directory at the end of the `docker build` command,
 
 1. Push the runtime image to Docker hub.
 
@@ -173,13 +177,19 @@ In this section, we will use S2I to build our application container image and th
     docker run -d --rm -p 9080:9080 authors
     ```
 
+1. Check the container is running successfully,
+
+    ```
+    docker ps -a
+    CONTAINER ID    IMAGE    COMMAND    CREATED    STATUS    PORTS    NAMES
+    7ba756f5f45b    authors    "/opt/ol/helpers/run…"    5 seconds ago    Up 4 seconds    0.0.0.0:9080->9080/tcp, 9443/tcp    optimistic_elbakyan
+    ```
+
 1. Retrieve the authors using curl,
 
     ```
     curl -X GET "http://localhost:9080/api/v1/getauthor" -H "accept: application/json"
     ```
-
-1. Or open up your browser and navigate to [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui) to view your deployed microservice.
 
 ### Deployment to OpenShift
 
