@@ -58,6 +58,12 @@ For this lab we will need to use a docker-in-docker environment so that we can b
     export DOCKER_USERNAME=<your-docker-username>
     ```
 
+1. Your root folder should be set to the root of the cloned repository, e.g. `/home/project/s2i-open-liberty-workshop`,
+
+    ```
+    echo $ROOT_FOLDER
+    /home/project/s2i-open-liberty-workshop
+    ```
 
 
 ### Build the builder image
