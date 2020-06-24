@@ -451,7 +451,7 @@ spec:
 This Ingress resource will create an access path to app1 at https://hello.remkohdev-iks116-2n-clu-2bef1f4b4097001da9502000c44fc2b2-0000.us-south.containers.appdomain.cloud/
 
 
-## 06. Network Policy
+## 07. Network Policy
 
 In this last section of the Kubernetes Networking lab, I want to create a Network Policy that only allows traffic coming from the HelloWorld application in the `default` namespace and not from another HelloWorld application in a `test` namespace.
 
@@ -688,4 +688,4 @@ $ kubectl delete deploy helloworld
 $ kubectl delete svc helloworld
 ```
 
-1. Continue to [Lab 2](../lab-02/README.md) or go back to the [Summary](../SUMMARY.md).
+Continue to [Lab 2](../lab-02/README.md) or go back to the [Summary](../SUMMARY.md).

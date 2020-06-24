@@ -31,7 +31,7 @@ You need access to a Kubernetes cluster:
 
 For all labs you can use the IBM Cloud Shell client, which you can access via https://shell.cloud.ibm.com.
 
-## Markdown lint tool
+## Markdown lint tool (Option)
 
 Install the [Markdown lint tool](https://github.com/markdownlint/markdownlint),
 ```
@@ -43,7 +43,7 @@ To use markdownlint, run the following command,
 $ markdownlint workshop -c ".markdownlint.json" -o mdl-results.md
 ```
 
-## Build Gitbook 
+## Build Gitbook (Option)
 
 Install the [gitbook-cli](https://github.com/GitbookIO/gitbook-cli),
 ```
