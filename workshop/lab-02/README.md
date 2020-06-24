@@ -165,7 +165,7 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
     Resource Group ID: 93f7a4cd3c824c0cbe90d8f21b46f758
     ```
 
-5. Create a new Object Storage instance via CLI command, for the lab you can use a `Standard` plan.
+5. Create a new Object Storage instance via CLI command, for the lab you can use a `Lite` plan.
 
     ```
     $ ibmcloud resource service-instance-create <instance-name> cloud-object-storage <plan> global -g Default
@@ -174,7 +174,7 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
     For example,
 
     ```
-    $ ibmcloud resource service-instance-create cos-securityconference cloud-object-storage Standard global -g Default
+    $ ibmcloud resource service-instance-create cos-securityconference cloud-object-storage Lite global -g Default
 
     OK
     Service instance cos-securityconference was created.                 
