@@ -489,21 +489,49 @@ Data in the `IBM Cloud Object Storage` is stored and organized in so-called `buc
     <username>-bucket-lab2    May 29, 2020 at 21:22:37
     ```
 
-1. In a browser, navigate to https://cloud.ibm.com/resources.
+1. Get your object storage configurations,
 
-1. Expand the Storage section .
+    ```
+    $ ibmcloud cos config list
+    Key                     Value   
+    Last Updated               
+    Default Region          us-south   
+    Download Location       /home/remkohdev/Downloads   
+    CRN                        
+    AccessKeyID                
+    SecretAccessKey            
+    Authentication Method   IAM   
+    URL Style               VHost 
+    ```
 
-1. Locate and select your IBM Cloud Object Storage service instance.
+    This will list your default region.
 
-1. In the left menu, select the `buckets` section Select your new `bucket` in the `Buckets` tab.
+    To list your bucket's location use
+    ```
+    $ ibmcloud cos get-bucket-location --bucket $COS_BUCKET
+    OK
+    Details about bucket remkohdev123-bucket-lab2:
+    Region: us-south
+    Class: Standard
+    ```
 
-1. Select the `Configuration` tab under `Buckets` iin the left pane.
+    With your bucket's location, e.g. `us-south`, you can find your bucket's private endpoint here https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints#advanced-endpoint-types, OR in the following steps you find it in your Cloud Object Storage's bucket configuration.
+
+2. In a browser, navigate to https://cloud.ibm.com/resources.
+
+3. Expand the Storage section .
+
+4. Locate and select your IBM Cloud Object Storage service instance.
+
+5. In the left menu, select the `buckets` section Select your new `bucket` in the `Buckets` tab.
+
+6. Select the `Configuration` tab under `Buckets` iin the left pane.
 
     ![](../.gitbook/images/cos-04.png)
 
-1. Take note of the `Private` endpoint.
+7. Take note of the `Private` endpoint.
 
-1. For your convenience, store the information in environment variable. In the Cloud Shell,
+8. For your convenience, store the information in environment variable. In the Cloud Shell,
 
     ```
     $ export PRIVATE_ENDPOINT=s3.private.us-south.cloud-object-storage.appdomain.cloud
