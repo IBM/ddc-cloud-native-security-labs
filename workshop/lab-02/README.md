@@ -221,6 +221,14 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
 
     ![](../.gitbook/images/cos-03.png)
 
+    **Create from CLI**
+    ```
+    $ ibmcloud resource service-key-create my-cos-lab2-credentials Writer --instance-name "cos-securityconference" --parameters '{"HMAC":true}'
+
+    $ ibmcloud resource service-key my-cos-lab2-credentials
+    
+    ```
+
 15. For your convenience, in the `Cloud Shell` store information in environment variables, store the Object Storage service name in `COS_SERVICE` and the credentials apikey in `COS_APIKEY`. Store each environment variable in cloud shell sessions for both accounts if you are using both your personal account and the pre-created account. 
 
 In the `Cloud Shell`, 
