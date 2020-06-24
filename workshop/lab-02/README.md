@@ -571,17 +571,17 @@ metadata:
     name: my-iks-pvc
     namespace: default
     annotations:
-    ibm.io/auto-create-bucket: "false"
-    ibm.io/auto-delete-bucket: "false"
-    ibm.io/bucket: "<your-cos-bucket>"
-    ibm.io/secret-name: "cos-write-access"
-    ibm.io/endpoint: "https://s3.private.us-south.cloud-object-storage.appdomain.cloud"
+        ibm.io/auto-create-bucket: "false"
+        ibm.io/auto-delete-bucket: "false"
+        ibm.io/bucket: "<your-cos-bucket>"
+        ibm.io/secret-name: "cos-write-access"
+        ibm.io/endpoint: "https://s3.private.us-south.cloud-object-storage.appdomain.cloud"
 spec:
     accessModes:
-    - ReadWriteOnce
+        - ReadWriteOnce
     resources:
-    requests:
-        storage: 8Gi
+        requests:
+            storage: 8Gi
     storageClassName: ibmc-s3fs-standard-regional' > my-iks-pvc.yaml
 ```
 
