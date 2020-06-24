@@ -450,22 +450,24 @@ In this optional section we will create our own copy of the code push the change
     export REPOSITORY_URL=<repo url>
     ```
 
-<!-- 1. Then, in your terminal, navigate to a directory where you'd like to clone your repo locally and run the following commands:
+    1. Then, in your terminal, navigate to the `$HOME` directory to clone your repo locally and run the following commands:
 
     ```bash
+    mkdir $HOME/tmp
+    cd $HOME/tmp
     git clone $REPOSITORY_URL
     cd s2i-open-liberty-workshop
-    ``` -->
+    ```
 
 
 
-1. Now that we have our own copy, let's push a change and test it out. From your browser, navigate to the GitHub repo that you forked. Click on the **Branch** dropdown and select **conference**. 
+2. Now that we have our own copy, let's push a change and test it out. From your browser, navigate to the GitHub repo that you forked. Click on the **Branch** dropdown and select **conference**. 
 
-1. Then navigate to the file at `web-app/src/main/java/com/ibm/authors/GetAuthor.java`
+3. Then navigate to the file at `web-app/src/main/java/com/ibm/authors/GetAuthor.java`
 
-1. Click on the pencil icon in the upper right of the code to enter editing mode.
+4. Click on the pencil icon in the upper right of the code to enter editing mode.
 
-1. On lines 56-59 edit the name, twitter, and blog to your own information or fake information if you'd like.
+5. On lines 56-59 edit the name, twitter, and blog to your own information or fake information if you'd like.
 
     ```java
     Author author = new Author();
@@ -474,9 +476,9 @@ In this optional section we will create our own copy of the code push the change
         author.blog = "http://developer.ibm.com";
     ```
 
-1. Scroll down and click on `Commit changes`.
+6. Scroll down and click on `Commit changes`.
 
-1. With the changes pushed, we can now rebuild and redeploy the application. Follow the following steps:
+7. With the changes pushed, we can now rebuild and redeploy the application. Follow the following steps:
 
     Build the builder image:
 
@@ -500,7 +502,7 @@ In this optional section we will create our own copy of the code push the change
     oc new-app --template authors-app -p DOCKER_USERNAME=$DOCKER_USERNAME -p APP_NAME=authors-3
     ```
 
-1. Once you have verified that the application is deployed and the new pod is running, enter the following command to view the application routes.
+8. Once you have verified that the application is deployed and the new pod is running, enter the following command to view the application routes.
 
     ```
     oc get routes
@@ -510,7 +512,7 @@ In this optional section we will create our own copy of the code push the change
     authors2    authors2-default.your-roks-43-1n-cl-2bef1f4b4097001da9502000c44fc2b2-0000.us-south.containers.appdomain.cloud    authors2    9080    None
     ```
 
-1. Copy the route named `authors-3` and add it to the end of the command below.
+9. Copy the route named `authors-3` and add it to the end of the command below.
 
     ```bash
     export API_URL=

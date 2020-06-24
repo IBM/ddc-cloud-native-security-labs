@@ -147,24 +147,34 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
 
 4. You also need a resource group at the time of writing, but none was created when you created a new account recently yet,
 
+    Check if you already have a resource-group
     ```
-    $ ibmcloud resource group-create default
-    Creating resource group default under account 5081ea1988f14a66a3ddf9d7fb3c6b29 as remko@remkoh.dev...
+    ibmcloud resource groups
     OK
-    Resource group default was created.
+    Name      ID                                 Default Group   State   
+    Default   282d2f25256540499cf99b43b34025bf   true            ACTIVE   
+    ```
+
+    If you do not have a resource group yet, create one,
+
+    ```
+    $ ibmcloud resource group-create Default
+    Creating resource group Default under account 5081ea1988f14a66a3ddf9d7fb3c6b29 as remko@remkoh.dev...
+    OK
+    Resource group Default was created.
     Resource Group ID: 93f7a4cd3c824c0cbe90d8f21b46f758
     ```
 
 5. Create a new Object Storage instance via CLI command, for the lab you can use a `Standard` plan.
 
     ```
-    $ ibmcloud resource service-instance-create <instance-name> cloud-object-storage <plan> global -g default
+    $ ibmcloud resource service-instance-create <instance-name> cloud-object-storage <plan> global -g Default
     ```
 
     For example,
 
     ```
-    $ ibmcloud resource service-instance-create cos-securityconference cloud-object-storage Standard global -g default
+    $ ibmcloud resource service-instance-create cos-securityconference cloud-object-storage Standard global -g Default
 
     OK
     Service instance cos-securityconference was created.                 
@@ -779,5 +789,8 @@ To verify MongoDB deployment,
 12. If you review the bucket in your Object Storage, MongoDB should now be writing its data files to the object storage.
 
     ![COS data files](../.gitbook/images/ibmcloud-cos-bucket-datafiles.png)
+
+
+
 
 1. Continue to [Lab 3](../lab-03/README.md) or go back to the [Summary](../SUMMARY.md).

@@ -688,4 +688,9 @@ $ kubectl delete deploy helloworld
 $ kubectl delete svc helloworld
 ```
 
+Uninstall MongoDB
+```
+$ helm uninstall mongodb
+```
+
 1. Continue to [Lab 2](../lab-02/README.md) or go back to the [Summary](../SUMMARY.md).
