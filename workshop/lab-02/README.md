@@ -564,26 +564,26 @@ In this exercise, you are going to use an existing bucket when assigning persist
 
 2. Create the file,
 
-    ```
-    $ echo 'kind: PersistentVolumeClaim
-    apiVersion: v1
-    metadata:
-      name: my-iks-pvc
-      namespace: default
-      annotations:
-        ibm.io/auto-create-bucket: "false"
-        ibm.io/auto-delete-bucket: "false"
-        ibm.io/bucket: "<your-cos-bucket>"
-        ibm.io/secret-name: "cos-write-access"
-        ibm.io/endpoint: "https://s3.private.us-south.cloud-object-storage.appdomain.cloud"
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 8Gi
-      storageClassName: ibmc-s3fs-standard-regional' > my-iks-pvc.yaml
-    ```
+```
+$ echo 'kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+    name: my-iks-pvc
+    namespace: default
+    annotations:
+    ibm.io/auto-create-bucket: "false"
+    ibm.io/auto-delete-bucket: "false"
+    ibm.io/bucket: "<your-cos-bucket>"
+    ibm.io/secret-name: "cos-write-access"
+    ibm.io/endpoint: "https://s3.private.us-south.cloud-object-storage.appdomain.cloud"
+spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+    requests:
+        storage: 8Gi
+    storageClassName: ibmc-s3fs-standard-regional' > my-iks-pvc.yaml
+```
 
 3. Edit the file and set the right values if changes are still needed,
 
