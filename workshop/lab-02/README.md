@@ -195,41 +195,42 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
                   Message   Completed create instance operation   
     ```
 
-6. In a browser, navigate to `https://cloud.ibm.com/resources` which shows a list of your services providioned in your cloud account.
+6. Now you need to add credentials. 
 
-7. Expand the `Storage` section. 
+7. You can do this from the CLI,
+    ```
+    $ ibmcloud resource service-key-create my-cos-lab2-credentials Writer --instance-name "cos-securityconference" --parameters '{"HMAC":true}'
 
-8. Locate and select your `IBM Cloud Object Storage` service instance.
+    $ ibmcloud resource service-key my-cos-lab2-credentials
+    ```   
+
+8. Or via the web UI. In a browser, navigate to `https://cloud.ibm.com/resources` which shows a list of your services providioned in your cloud account.
+
+9. Expand the `Storage` section. 
+
+10. Locate and select your `IBM Cloud Object Storage` service instance.
 
     ![](../.gitbook/images/cos-01.png)
 
-9.  Navigate to the `Service credentials` tab.
+11. Navigate to the `Service credentials` tab.
 
     ![](../.gitbook/images/cos-02.png)
 
-10. Click on `New credential` button. 
+12. Click on `New credential` button. 
 
-11. Change the name to reference the Cloud Object Storage, e.g. `my-cos-lab2-credentials`
+13. Change the name to reference the Cloud Object Storage, e.g. `my-cos-lab2-credentials`
 
-12. For `Role` accept `Writer`,
+14. For `Role` accept `Writer`,
 
-13. Accept all other default settings, and select `Add` to create a new one.
+15. Accept all other default settings, and select `Add` to create a new one.
 
-14. Expand your new service credentials, you will need the credentials to configure the persistent volume later, and take a note of 
+16. Expand your new service credentials, you will need the credentials to configure the persistent volume later, and take a note of 
     - `apikey` in your `Service credential` and 
     - `name` of your `IBM Cloud Object Storage` service instance.
 
     ![](../.gitbook/images/cos-03.png)
 
-    **Create from CLI**
-    ```
-    $ ibmcloud resource service-key-create my-cos-lab2-credentials Writer --instance-name "cos-securityconference" --parameters '{"HMAC":true}'
-
-    $ ibmcloud resource service-key my-cos-lab2-credentials
-    
-    ```
-
-15. For your convenience, in the `Cloud Shell` store information in environment variables, store the Object Storage service name in `COS_SERVICE` and the credentials apikey in `COS_APIKEY`. Store each environment variable in cloud shell sessions for both accounts if you are using both your personal account and the pre-created account. 
+17. For your convenience, in the `Cloud Shell` store information in environment variables, store the Object Storage service name in `COS_SERVICE` and the credentials apikey in `COS_APIKEY`. Store each environment variable in cloud shell sessions for both accounts if you are using both your personal account and the pre-created account. 
 
 In the `Cloud Shell`, 
 
