@@ -147,24 +147,34 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
 
 4. You also need a resource group at the time of writing, but none was created when you created a new account recently yet,
 
+    Check if you already have a resource-group
     ```
-    $ ibmcloud resource group-create default
-    Creating resource group default under account 5081ea1988f14a66a3ddf9d7fb3c6b29 as remko@remkoh.dev...
+    ibmcloud resource groups
     OK
-    Resource group default was created.
+    Name      ID                                 Default Group   State   
+    Default   282d2f25256540499cf99b43b34025bf   true            ACTIVE   
+    ```
+
+    If you do not have a resource group yet, create one,
+
+    ```
+    $ ibmcloud resource group-create Default
+    Creating resource group Default under account 5081ea1988f14a66a3ddf9d7fb3c6b29 as remko@remkoh.dev...
+    OK
+    Resource group Default was created.
     Resource Group ID: 93f7a4cd3c824c0cbe90d8f21b46f758
     ```
 
-5. Create a new Object Storage instance via CLI command, for the lab you can use a `Standard` plan.
+5. Create a new Object Storage instance via CLI command, for the lab you can use a `Lite` plan.
 
     ```
-    $ ibmcloud resource service-instance-create <instance-name> cloud-object-storage <plan> global -g default
+    $ ibmcloud resource service-instance-create <instance-name> cloud-object-storage <plan> global -g Default
     ```
 
     For example,
 
     ```
-    $ ibmcloud resource service-instance-create cos-securityconference cloud-object-storage Standard global -g default
+    $ ibmcloud resource service-instance-create cos-securityconference cloud-object-storage Lite global -g Default
 
     OK
     Service instance cos-securityconference was created.                 
@@ -185,33 +195,42 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
                   Message   Completed create instance operation   
     ```
 
-6. In a browser, navigate to `https://cloud.ibm.com/resources` which shows a list of your services providioned in your cloud account.
+6. Now you need to add credentials. 
 
-7. Expand the `Storage` section. 
+7. You can do this from the CLI,
+    ```
+    $ ibmcloud resource service-key-create my-cos-lab2-credentials Writer --instance-name "cos-securityconference" --parameters '{"HMAC":true}'
 
-8. Locate and select your `IBM Cloud Object Storage` service instance.
+    $ ibmcloud resource service-key my-cos-lab2-credentials
+    ```   
+
+8. Or via the web UI. In a browser, navigate to `https://cloud.ibm.com/resources` which shows a list of your services providioned in your cloud account.
+
+9. Expand the `Storage` section. 
+
+10. Locate and select your `IBM Cloud Object Storage` service instance.
 
     ![](../.gitbook/images/cos-01.png)
 
-9.  Navigate to the `Service credentials` tab.
+11. Navigate to the `Service credentials` tab.
 
     ![](../.gitbook/images/cos-02.png)
 
-10. Click on `New credential` button. 
+12. Click on `New credential` button. 
 
-11. Change the name to reference the Cloud Object Storage, e.g. `my-cos-lab2-credentials`
+13. Change the name to reference the Cloud Object Storage, e.g. `my-cos-lab2-credentials`
 
-12. For `Role` accept `Writer`,
+14. For `Role` accept `Writer`,
 
-13. Accept all other default settings, and select `Add` to create a new one.
+15. Accept all other default settings, and select `Add` to create a new one.
 
-14. Expand your new service credentials, you will need the credentials to configure the persistent volume later, and take a note of 
+16. Expand your new service credentials, you will need the credentials to configure the persistent volume later, and take a note of 
     - `apikey` in your `Service credential` and 
     - `name` of your `IBM Cloud Object Storage` service instance.
 
     ![](../.gitbook/images/cos-03.png)
 
-15. For your convenience, in the `Cloud Shell` store information in environment variables, store the Object Storage service name in `COS_SERVICE` and the credentials apikey in `COS_APIKEY`. Store each environment variable in cloud shell sessions for both accounts if you are using both your personal account and the pre-created account. 
+17. For your convenience, in the `Cloud Shell` store information in environment variables, store the Object Storage service name in `COS_SERVICE` and the credentials apikey in `COS_APIKEY`. Store each environment variable in cloud shell sessions for both accounts if you are using both your personal account and the pre-created account. 
 
 In the `Cloud Shell`, 
 
@@ -470,21 +489,49 @@ Data in the `IBM Cloud Object Storage` is stored and organized in so-called `buc
     <username>-bucket-lab2    May 29, 2020 at 21:22:37
     ```
 
-1. In a browser, navigate to https://cloud.ibm.com/resources.
+1. Get your object storage configurations,
 
-1. Expand the Storage section .
+    ```
+    $ ibmcloud cos config list
+    Key                     Value   
+    Last Updated               
+    Default Region          us-south   
+    Download Location       /home/remkohdev/Downloads   
+    CRN                        
+    AccessKeyID                
+    SecretAccessKey            
+    Authentication Method   IAM   
+    URL Style               VHost 
+    ```
 
-1. Locate and select your IBM Cloud Object Storage service instance.
+    This will list your default region.
 
-1. In the left menu, select the `buckets` section Select your new `bucket` in the `Buckets` tab.
+    To list your bucket's location use
+    ```
+    $ ibmcloud cos get-bucket-location --bucket $COS_BUCKET
+    OK
+    Details about bucket remkohdev123-bucket-lab2:
+    Region: us-south
+    Class: Standard
+    ```
 
-1. Select the `Configuration` tab under `Buckets` iin the left pane.
+    With your bucket's location, e.g. `us-south`, you can find your bucket's private endpoint here https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints#advanced-endpoint-types, OR in the following steps you find it in your Cloud Object Storage's bucket configuration.
+
+2. In a browser, navigate to https://cloud.ibm.com/resources.
+
+3. Expand the Storage section .
+
+4. Locate and select your IBM Cloud Object Storage service instance.
+
+5. In the left menu, select the `buckets` section Select your new `bucket` in the `Buckets` tab.
+
+6. Select the `Configuration` tab under `Buckets` iin the left pane.
 
     ![](../.gitbook/images/cos-04.png)
 
-1. Take note of the `Private` endpoint.
+7. Take note of the `Private` endpoint.
 
-1. For your convenience, store the information in environment variable. In the Cloud Shell,
+8. For your convenience, store the information in environment variable. In the Cloud Shell,
 
     ```
     $ export PRIVATE_ENDPOINT=s3.private.us-south.cloud-object-storage.appdomain.cloud
@@ -517,26 +564,26 @@ In this exercise, you are going to use an existing bucket when assigning persist
 
 2. Create the file,
 
-    ```
-    $ echo 'kind: PersistentVolumeClaim
-    apiVersion: v1
-    metadata:
-      name: my-iks-pvc
-      namespace: default
-      annotations:
+```
+$ echo 'kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+    name: my-iks-pvc
+    namespace: default
+    annotations:
         ibm.io/auto-create-bucket: "false"
         ibm.io/auto-delete-bucket: "false"
         ibm.io/bucket: "<your-cos-bucket>"
         ibm.io/secret-name: "cos-write-access"
         ibm.io/endpoint: "https://s3.private.us-south.cloud-object-storage.appdomain.cloud"
-    spec:
-      accessModes:
+spec:
+    accessModes:
         - ReadWriteOnce
-      resources:
+    resources:
         requests:
-          storage: 8Gi
-      storageClassName: ibmc-s3fs-standard-regional' > my-iks-pvc.yaml
-    ```
+            storage: 8Gi
+    storageClassName: ibmc-s3fs-standard-regional' > my-iks-pvc.yaml
+```
 
 3. Edit the file and set the right values if changes are still needed,
 
@@ -779,5 +826,8 @@ To verify MongoDB deployment,
 12. If you review the bucket in your Object Storage, MongoDB should now be writing its data files to the object storage.
 
     ![COS data files](../.gitbook/images/ibmcloud-cos-bucket-datafiles.png)
+
+
+
 
 1. Continue to [Lab 3](../lab-03/README.md) or go back to the [Summary](../SUMMARY.md).
