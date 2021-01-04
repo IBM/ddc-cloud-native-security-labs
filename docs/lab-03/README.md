@@ -15,7 +15,7 @@ However, with compiled languages like Java, the build and runtime processes can 
 
 This lab will focus on the second scenario of using a builder image along with a runtime image.
 
-![runtime image flow](../.gitbook/images/lab-03/runtime-image-flow.png)
+![runtime image flow](../assets/images/lab-03/runtime-image-flow.png)
 
 (source: <https://github.com/openshift/source-to-image/blob/master/docs/runtime_image.md>)
 
@@ -206,11 +206,11 @@ Now that we have the application running locally and have verified that it works
     1. Browse to your assigned OpenShift cluster Overview page,
     1. From the top right, open your `OpenShift web console`
 
-        ![Open OpenShift Web Console](../.gitbook/images/lab-03/open-openshift-console.png)
+        ![Open OpenShift Web Console](../assets/images/lab-03/open-openshift-console.png)
 
     1. In the OpenShift Web Console, from the profile dropdown click  `Copy Login Command`.
 
-        ![Copy Login Command](../.gitbook/images/lab-03/copy-login-command.png)
+        ![Copy Login Command](../assets/images/lab-03/copy-login-command.png)
 
     1. Paste the login command to login, e.g.
 
@@ -290,7 +290,7 @@ For this method, we will deploy our application by creating a kubernetes deploym
     authors-route-default...appdomain.cloud/openapi/ui
     ```
 
-    ![Authors OpenAPI UI](../.gitbook/images/lab-03/authors-openapi-ui.png)
+    ![Authors OpenAPI UI](../assets/images/lab-03/authors-openapi-ui.png)
 
 It sometimes takes a minute to fully deploy so if you get a message about the application not being available, try again.
 
@@ -358,7 +358,7 @@ For this section, you will explore how to build and deploy our application using
 
 Now with our builds run, we can deploy our application. Previously we used a kubernetes deployment object to do this however this time we will use an OpenShift deployment configuration.
 
-Both objects are similar and will accomplish the same goals however with deployment configs you have greater control of your application's deployment behavior. You also have the option to set automated triggers to kick off builds and deploys based on image, configuration, or git repository changes. Due to a limitation in our workshop environment, we will not be exploring triggers and utilizing image streams with the integrated OpenShift registry, however, if you would like to take a look at a template that automates the entire build and deploy process with triggers, check out the [this example template](./exampleTemplate.yaml) found in the workshop repo.
+Both objects are similar and will accomplish the same goals however with deployment configs you have greater control of your application's deployment behavior. You also have the option to set automated triggers to kick off builds and deploys based on image, configuration, or git repository changes. Due to a limitation in our workshop environment, we will not be exploring triggers and utilizing image streams with the integrated OpenShift registry.
 
 1. Let's check out the deployment config template:
 

@@ -219,7 +219,7 @@ You can now connect to the service via the public IP address of any worker node 
 
 You don't have sufficient permissions to retrieve the cluster's worker nodes' Public IPs for the account that the clusters were created on, via the cloud shell and the `ibmcloud` cli. But you can find the worker nodes of your cluster in the cluster detail page in the IBM Cloud UI. Find your cluster via <https://cloud.ibm.com/kubernetes/clusters>. Select your cluster and go to `Worker Nodes`, look for the Public IP of one of the worker nodes.
 
-![Cluster worker nodes](../.gitbook/images/ibmcloud-cluster-workernodes.png)
+![Cluster worker nodes](../assets/images/ibmcloud-cluster-workernodes.png)
 
 If you do have sufficient permissions you can view the worker nodes of your cluster with the command,
 
@@ -248,7 +248,7 @@ The client connects to the load balancer via a public IP address on the worker n
 
 In the previous steps, you created a service for the `helloworld` application with a clusterIP and then added a NodePort to the Service. But you still want a load balancer of some kind in front of your application, whether your clients are internal or coming in over the public network. A load balancer acts as a reverse proxy and distributes network or application traffic across a number of servers.
 
-![Reverse Proxy](../.gitbook/images/wiki_reverse_proxy.png)
+![Reverse Proxy](../assets/images/wiki_reverse_proxy.png)
 
 To use a load balancer as a reverse proxy for distributing client traffic to the nodes in a cluster, you need a public IP address for the service that the clients can connect to, and you need IP addresses on the nodes themselves to which the load balancer can forward the requests.
 
@@ -330,7 +330,7 @@ I want to access `HelloWorld` via the Ingress subdomain and a path rule via a pa
 
 You need the Ingress Subdomain and Ingress Secret of your cluster to configure your Ingress resource. Go to your cluster's Overview page to see the Ingress subdomain and secret.
 
-![Ingress Subdomain](../.gitbook/images/ibmcloud-cluster-ingress-subdomain.png)
+![Ingress Subdomain](../assets/images/ibmcloud-cluster-ingress-subdomain.png)
 
 The `Ingress Secret` will be the first part of the
 `Ingress Subdomain` of your cluster. E.g. if the `Ingress Subdomain` is the following:

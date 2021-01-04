@@ -47,7 +47,7 @@ This lab uses the [IBM Cloud Object Storage plugin](https://github.com/IBM/ibmcl
 
 [`s3fs`](https://github.com/s3fs-fuse/s3fs-fuse) allows Linux and macOS to mount an S3 bucket via FUSE.
 
-![arch](../.gitbook/images/cos-plugin-architecture.png)
+![arch](../assets/images/cos-plugin-architecture.png)
 
 ### IBM Cloud Shell
 
@@ -139,11 +139,11 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
 
 1. Note, that if you are using a pre-created cluster you are now logged into a different account than your personal account, because the other account is where the clusters were created for you. On this other account you do not have permission to create new services, so switch to your personal account first before you create the new service.
 
-    ![IBMCloud Switch Accounts](../.gitbook/images/ibmcloud-switch-accounts.png)
+    ![IBMCloud Switch Accounts](../assets/images/ibmcloud-switch-accounts.png)
 
 1. If you are using the CLI to create a new service, in the `Cloud Shell` open a new session, and login to your personal account,
 
-    ![IBMCloud new shell session](../.gitbook/images/ibmcloud-new-shell-session.png)
+    ![IBMCloud new shell session](../assets/images/ibmcloud-new-shell-session.png)
 
 1. You also need a resource group at the time of writing, but none was created when you created a new account recently yet,
 
@@ -212,11 +212,11 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
 
 1. Locate and select your `IBM Cloud Object Storage` service instance.
 
-   ![cos](../.gitbook/images/cos-01.png)
+   ![cos](../assets/images/cos-01.png)
 
 1. Navigate to the `Service credentials` tab.
 
-   ![cos](../.gitbook/images/cos-02.png)
+   ![cos](../assets/images/cos-02.png)
 
 1. Click on `New credential` button.
 
@@ -231,7 +231,7 @@ If you have an existing `IBM Cloud Object Storage` service instance, you can use
     - `apikey` in your `Service credential` and
     - `name` of your `IBM Cloud Object Storage` service instance.
 
-   ![cos](../.gitbook/images/cos-03.png)
+   ![cos](../assets/images/cos-03.png)
 
 1. For your convenience, in the `Cloud Shell` store information in environment variables, store the Object Storage service name in `COS_SERVICE` and the credentials apikey in `COS_APIKEY`. Store each environment variable in cloud shell sessions for both accounts if you are using both your personal account and the pre-created account.
 
@@ -531,7 +531,7 @@ Data in the `IBM Cloud Object Storage` is stored and organized in so-called `buc
 
 1. Select the `Configuration` tab under `Buckets` iin the left pane.
 
-    ![cos](../.gitbook/images/cos-04.png)
+    ![cos](../assets/images/cos-04.png)
 
 1. Take note of the `Private` endpoint.
 
@@ -826,6 +826,6 @@ To verify MongoDB deployment,
 
 1. If you review the bucket in your Object Storage, MongoDB should now be writing its data files to the object storage.
 
-    ![COS data files](../.gitbook/images/ibmcloud-cos-bucket-datafiles.png)
+    ![COS data files](../assets/images/ibmcloud-cos-bucket-datafiles.png)
 
 1. Continue to [Lab 3](../lab-03/README.md) or go back to the [Summary](../SUMMARY.md).
