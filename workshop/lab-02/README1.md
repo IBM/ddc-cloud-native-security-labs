@@ -1,18 +1,19 @@
-## Create a Java Spring Boot App and Connect to MongoDB
+# Create a Java Spring Boot App and Connect to MongoDB
 
-See: https://github.com/spring-projects/spring-data-book/blob/master/mongodb]
-See: https://docs.spring.io/spring-data/mongodb/docs/3.0.0.RELEASE/reference/html/#reference
+See: <https://github.com/spring-projects/spring-data-book/blob/master/mongodb>
+See: <https://docs.spring.io/spring-data/mongodb/docs/3.0.0.RELEASE/reference/html/#reference>
 
-```
-$ spring init --dependencies=web,data-rest,thymeleaf guestbook-api
-$ cd guestbook-api
-$ mvn clean install
-$ mvn test
-$ mvn spring-boot:run
+```bash
+spring init --dependencies=web,data-rest,thymeleaf guestbook-api
+cd guestbook-api
+mvn clean install
+mvn test
+mvn spring-boot:run
 ```
 
 Create the APIController,
-```
+
+```bash
 $ echo 'package com.example.guestbookapi;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class APIController {
 
   @Autowired
   private MessageRepository repository;
-    
+
   @GetMapping("/api")
   public String index() {
     return "Welcome to Spring Boot App";
@@ -63,7 +64,8 @@ public class APIController {
 ```
 
 Create the Message class,
-```
+
+```bash
 $ echo 'package com.example.guestbookapi;
 
 import org.springframework.data.annotation.Id;
@@ -72,7 +74,7 @@ public class Message {
 
   @Id
   private String id;
-  
+
   private String sender;
   private String message;
 
@@ -99,7 +101,8 @@ public class Message {
 ```
 
 Create the MessageRepository class,
-```
+
+```bash
 echo 'package com.example.guestbookapi;
 
 import java.util.List;
@@ -107,13 +110,14 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface MessageRepository extends MongoRepository<Message, String> {
 
-	public List<Message> findBySender(String sender);
+ public List<Message> findBySender(String sender);
 
 }' > src/main/java/com/example/guestbookapi/MessageRepository.java
 ```
 
 Add a new file ‘~/src/main/resources/application.properties’,
-```
+
+```bash
 echo 'spring.data.mongodb.authentication-database=admin
 spring.data.mongodb.username=user1
 spring.data.mongodb.password=passw0rd
@@ -122,20 +126,23 @@ spring.data.mongodb.port=27017
 spring.data.mongodb.host=mongodb' > src/main/resources/application.properties
 ```
 
-## Test Java App on localhost:
+## Test Java App on localhost
 
 Create local Mongodb,
-```
+
+```bash
 docker run --name mongo -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=user1 -e MONGO_INITDB_ROOT_PASSWORD=passw0rd  mongo
 ```
 
 Get IP address on mac osx,
-```
-$ ifconfig en0 | grep inet
+
+```bash
+ifconfig en0 | grep inet
 ```
 
 Configure application.properties and change the host to your local IP Address to test the app on localhost.
-```
+
+```ini
 spring.data.mongodb.authentication-database=admin
 spring.data.mongodb.username=user1
 spring.data.mongodb.password=passw0rd
@@ -145,13 +152,15 @@ spring.data.mongodb.host=192.168.1.4
 ```
 
 Clean, install and run,
-```
-$ mvn clean install
-$ mvn spring-boot:run
+
+```bash
+mvn clean install
+mvn spring-boot:run
 ```
 
 Test it your messages are saved and retrieved,
-```
+
+```bash
 $ curl -X GET 'http://127.0.0.1:8080/api/hello?name=remko'
 { "message" : "Hello remko" }
 $ curl -X GET 'http://127.0.0.1:8080/api/hello?name=emily'
@@ -163,16 +172,14 @@ $ curl --location --request GET 'http://127.0.0.1:8080/api/messages'
 
 ## Dockerize
 
-```
+```Dockerfile
 FROM openjdk:8-jdk-alpine
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 ```
 
-
 ## Deploy to Kubernetes
 
 TODO: set spring boot config at deploy time via secret,
 TODO: add Dockerfile, add Deployment files, deploy
-

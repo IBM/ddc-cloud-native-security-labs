@@ -14,10 +14,9 @@
 
 ### Resources
 
-- [Cloud Native Computing Foundation](https://www.cncf.io/)
-- [Cloud Native Security Conference](https://developer.ibm.com/conferences/digital-developer-conference-security/)
-- [IBM Developer](https://developer.ibm.com)
-
+* [Cloud Native Computing Foundation](https://www.cncf.io/)
+* [Cloud Native Security Conference](https://developer.ibm.com/conferences/digital-developer-conference-security/)
+* [IBM Developer](https://developer.ibm.com)
 
 ### Survey
 

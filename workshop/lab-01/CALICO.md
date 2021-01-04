@@ -1,6 +1,6 @@
+# Tips for using Calico
 
-
-$ wget https://github.com/projectcalico/calicoctl/releases/download/v3.14.1/calicoctl
+$ wget <https://github.com/projectcalico/calicoctl/releases/download/v3.14.1/calicoctl>
 $ chmod 755 calicoctl
 $ echo 'export PATH=$HOME:$PATH' > .bash_profile
 $ source .bash_profile
@@ -26,8 +26,8 @@ $ ADMINDIR=remkohdev-iks116-2n-cluster-br9v078d0qi43m0e31n0-admin
 $ mv /tmp/ic/$SHELL/.bluemix/plugins/container-service/clusters/$ADMINDIR/calicoctl.cfg /etc/calico
 
 $ calicoctl get nodes
-NAME                                                     
-kube-br9v078d0qi43m0e31n0-remkohdevik-default-0000014b   
+NAME
+kube-br9v078d0qi43m0e31n0-remkohdevik-default-0000014b
 kube-br9v078d0qi43m0e31n0-remkohdevik-default-000002e0
 
 $ calicoctl version
@@ -41,6 +41,7 @@ View network policy
 $ calicoctl get hostendpoint -o yaml
 apiVersion: projectcalico.org/v3
 items:
+
 - apiVersion: projectcalico.org/v3
   kind: HostEndpoint
   metadata:
@@ -77,7 +78,7 @@ items:
     uid: e0eaf0d6-a36b-11ea-8f29-06ce448b0c2d
   spec:
     expectedIPs:
-    - 10.187.222.149
+  - 10.187.222.149
     interfaceName: eth0
     node: kube-br9v078d0qi43m0e31n0-remkohdevik-default-0000014b
 - apiVersion: projectcalico.org/v3
@@ -116,7 +117,7 @@ items:
     uid: 78ec7195-2ddd-4b5f-b7c4-8a54d25f4beb
   spec:
     expectedIPs:
-    - 150.238.93.101
+  - 150.238.93.101
     interfaceName: eth1
     node: kube-br9v078d0qi43m0e31n0-remkohdevik-default-0000014b
 - apiVersion: projectcalico.org/v3
@@ -155,7 +156,7 @@ items:
     uid: c2fcd831-a36b-11ea-97f2-06edddc7e672
   spec:
     expectedIPs:
-    - 10.187.222.146
+  - 10.187.222.146
     interfaceName: eth0
     node: kube-br9v078d0qi43m0e31n0-remkohdevik-default-000002e0
 - apiVersion: projectcalico.org/v3
@@ -194,25 +195,23 @@ items:
     uid: e8c1fb2b-1a88-4cb4-a10e-67c9bdd28e1c
   spec:
     expectedIPs:
-    - 150.238.93.100
+  - 150.238.93.100
     interfaceName: eth1
     node: kube-br9v078d0qi43m0e31n0-remkohdevik-default-000002e0
 kind: HostEndpointList
 metadata:
   resourceVersion: "40605"
 
-
 $ calicoctl get NetworkPolicy --all-namespaces -o wide
-NAMESPACE     NAME                               ORDER   SELECTOR                                                                       
-kube-system   knp.default.kubernetes-dashboard   1000    projectcalico.org/orchestrator == 'k8s' && k8s-app == 'kubernetes-dashboard'   
-
+NAMESPACE     NAME                               ORDER   SELECTOR
+kube-system   knp.default.kubernetes-dashboard   1000    projectcalico.org/orchestrator == 'k8s' && k8s-app == 'kubernetes-dashboard'
 
 $ calicoctl get GlobalNetworkPolicy -o wide
 NAME    ORDER    SELECTOR
-allow-all-outbound          1900     ibm.role in { 'worker_public', 'master_public' }   
-allow-all-private-default   100000   ibm.role == 'worker_private'                       
-allow-bigfix-port           1900     ibm.role in { 'worker_public', 'master_public' }   
-allow-icmp                  1500     ibm.role in { 'worker_public', 'master_public' }   
-allow-node-port-dnat        1500     ibm.role == 'worker_public'                        
-allow-sys-mgmt              1950     ibm.role in { 'worker_public', 'master_public' }   
-allow-vrrp                  1500     ibm.role == 'worker_public' 
+allow-all-outbound          1900     ibm.role in { 'worker_public', 'master_public' }
+allow-all-private-default   100000   ibm.role == 'worker_private'
+allow-bigfix-port           1900     ibm.role in { 'worker_public', 'master_public' }
+allow-icmp                  1500     ibm.role in { 'worker_public', 'master_public' }
+allow-node-port-dnat        1500     ibm.role == 'worker_public'
+allow-sys-mgmt              1950     ibm.role in { 'worker_public', 'master_public' }
+allow-vrrp                  1500     ibm.role == 'worker_public'

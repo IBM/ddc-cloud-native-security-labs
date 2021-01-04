@@ -1,4 +1,4 @@
-## Troubleshooting
+# Troubleshooting
 
 ######################################################
 Additional steps for IBM Kubernetes Service(IKS) only:
@@ -35,11 +35,11 @@ Additional steps for IBM Kubernetes Service(IKS) only:
 
      i.  Generate the secrets in the "default" namespace.
 
-         $ ibmcloud ks cluster-pull-secret-apply
+         ibmcloud ks cluster-pull-secret-apply
 
      ii. Verify that the secrets are created in the "default" namespace. The creation of the secrets might take a few minutes to complete.
 
-         $ kubectl get secrets -n default | grep icr-io
+         kubectl get secrets -n default | grep icr-io
 
      iii. Run the commands in step 3 to copy the secrets from the "default" namespace to the "kube-system" namespace.
 
@@ -53,22 +53,22 @@ Additional steps for IBM Kubernetes Service(IKS) only:
 
 Verify that installation was successful
 
-```
-$ kubectl get storageclass | grep 'ibmc-s3fs'
-ibmc-s3fs-cold-cross-region            ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-cold-regional                ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-flex-cross-region            ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-flex-perf-cross-region       ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-flex-perf-regional           ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-flex-regional                ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-standard-cross-region        ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-standard-perf-cross-region   ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-standard-perf-regional       ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-standard-regional            ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-vault-cross-region           ibm.io/ibmc-s3fs   60s
-ibmc-s3fs-vault-regional               ibm.io/ibmc-s3fs   60s
+      ```bash
+      $ kubectl get storageclass | grep 'ibmc-s3fs'
+      ibmc-s3fs-cold-cross-region            ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-cold-regional                ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-flex-cross-region            ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-flex-perf-cross-region       ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-flex-perf-regional           ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-flex-regional                ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-standard-cross-region        ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-standard-perf-cross-region   ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-standard-perf-regional       ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-standard-regional            ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-vault-cross-region           ibm.io/ibmc-s3fs   60s
+      ibmc-s3fs-vault-regional               ibm.io/ibmc-s3fs   60s
 
-$ kubectl get pods -n kube-system -o wide | grep object
-ibmcloud-object-storage-driver-ns64d    1/1    Running    0    2m10s    10.47.79.90    10.47.79.90    <none>    <none>
-ibmcloud-object-storage-plugin-79cc466c76-c2kcb    1/1    Running    0    2m10s    172.30.73.78    10.47.79.90    <none>    <none>
-```
+      $ kubectl get pods -n kube-system -o wide | grep object
+      ibmcloud-object-storage-driver-ns64d    1/1    Running    0    2m10s    10.47.79.90    10.47.79.90    <none>    <none>
+      ibmcloud-object-storage-plugin-79cc466c76-c2kcb    1/1    Running    0    2m10s    172.30.73.78    10.47.79.90    <none>    <none>
+      ```

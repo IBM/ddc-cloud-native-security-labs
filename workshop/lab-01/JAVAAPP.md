@@ -2,7 +2,7 @@
 
 1. Create the Kubernetes deployment resource,
 
-    ```
+    ```bash
     $ echo 'apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -17,7 +17,7 @@
       template:
         metadata:
           labels:
-            app: helloworld     
+            app: helloworld
         spec:
           containers:
           - name: helloworld
@@ -29,7 +29,7 @@
 
 1. Create the kubernetes Service resource,
 
-    ```
+    ```bash
     $ echo 'apiVersion: v1
     kind: Service
     metadata:
@@ -46,14 +46,14 @@
 
 1. Deploy the Kubernetes Deployment resource for HellWorld,
 
-    ```
+    ```bash
     $ kubectl create -f deployment.yaml
     deployment.apps/helloworld created
     ```
 
-2. Check the deployment,
+1. Check the deployment,
 
-    ```
+    ```bash
     $ kubectl get all
     NAME    READY    STATUS    RESTARTS    AGE
     pod/helloworld-5f8b6b587b-5tcd7    1/1    Running
@@ -74,4 +74,3 @@
     ```
 
 Go back to the next step in the [lab](README.md).
-
