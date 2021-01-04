@@ -1,4 +1,4 @@
-# Lab 03 - Create a Custom Builder Image for Source-to-Image (S2I) 
+# Lab 03 - Create a Custom Builder Image for Source-to-Image (S2I)
 
 This project contains a Source-to-Image (S2I) builder image and a S2I runtime image which creates an image running Java web applications on [Open Liberty](https://openliberty.io/).
 
@@ -17,9 +17,9 @@ This lab will focus on the second scenario of using a builder image along with a
 
 ![runtime image flow](../.gitbook/images/lab-03/runtime-image-flow.png)
 
-(source: https://github.com/openshift/source-to-image/blob/master/docs/runtime_image.md)
+(source: <https://github.com/openshift/source-to-image/blob/master/docs/runtime_image.md>)
 
-### Prerequisites
+## Prerequisites
 
 The following prerequisites are needed:
 
@@ -29,7 +29,7 @@ The following prerequisites are needed:
 * [Have followed these steps to get a cluster](https://github.com/IBM/ddc-cloud-native-security-labs/blob/master/workshop/lab-00/README.md)
   * You can stop after step 11
 
-### Setup
+## Setup
 
 For this lab we will need to use a docker-in-docker environment so that we can build our images. For this scenario we will be using the labs client of [IBM Skills Network](https://labs.cognitiveclass.ai/).
 
@@ -60,11 +60,10 @@ For this lab we will need to use a docker-in-docker environment so that we can b
 
 1. Your root folder should be set to the root of the cloned repository, e.g. `/home/project/s2i-open-liberty-workshop`,
 
-    ```
+    ```bash
     echo $ROOT_FOLDER
     /home/project/s2i-open-liberty-workshop
     ```
-
 
 ### Build the builder image
 
@@ -90,13 +89,13 @@ In this section we will create the first of our two S2I images. This image will 
 
 1. You can customize the builder image further, e.g. change the `LABEL` for `maintainer` to your name,
 
-    ```
+    ```bash
     LABEL maintainer="<your-name>"
     ```
 
 1. Now build the builder image.
 
-    ```
+    ```bash
     docker build -t $DOCKER_USERNAME/s2i-open-liberty-builder:0.1.0 .
     ```
 
@@ -122,19 +121,19 @@ In this section you will create the second of our two S2I images. The runtime im
 
 1. Navigate to the runtime image directory
 
-    ```
+    ```bash
     cd $ROOT_FOLDER/runtime-image
     ```
 
 1. Review the ./Dockerfile
 
-    ```
+    ```bash
     cat Dockerfile
     ```
 
 1. Build the runtime image
 
-    ```
+    ```bash
     docker build -t $DOCKER_USERNAME/s2i-open-liberty:0.1.0 .
     ```
 
@@ -154,32 +153,33 @@ In this section, we will use S2I to build our application container image and th
 
 1. Use the builder image and runtime image to build the application image
 
-    ```
+    ```bash
     cd $ROOT_FOLDER/web-app
     ```
 
 1. Run a multistage S2I build, to build the application.
 
-    ```
+    ```bash
     ~/s2i/s2i build . $DOCKER_USERNAME/s2i-open-liberty-builder:0.1.0 authors --runtime-image $DOCKER_USERNAME/s2i-open-liberty:0.1.0 -a /tmp/src/target -a /tmp/src/server.xml
     ```
 
     Let's break down the above command:
-    - s2i build . - Use [`s2i build`](https://github.com/openshift/source-to-image/blob/master/docs/cli.md#s2i-build) in the current directory to build the Docker image by combining the builder image and sources
-    - $DOCKER_USERNAME/s2i-open-liberty-builder:0.1.0 - This is the builder image used to build the application
-    - authors - name of our application image
-    - --runtime-image $DOCKER_USERNAME/s2i-open-liberty:0.1.0 - Take the output of the builder image and run it in this container.
-    - -a /tmp/src/target -a /tmp/src/server.xml - The `runtime-artifact` flag specifies a file or directory to be copies from builder to runtime image. The runtime-artifact is where the builder output is located. These files will be passed into the runtime image.
+
+    * s2i build . - Use [`s2i build`](https://github.com/openshift/source-to-image/blob/master/docs/cli.md#s2i-build) in the current directory to build the Docker image by combining the builder image and sources
+    * $DOCKER_USERNAME/s2i-open-liberty-builder:0.1.0 - This is the builder image used to build the application
+    * authors - name of our application image
+    * --runtime-image $DOCKER_USERNAME/s2i-open-liberty:0.1.0 - Take the output of the builder image and run it in this container.
+    * -a /tmp/src/target -a /tmp/src/server.xml - The `runtime-artifact` flag specifies a file or directory to be copies from builder to runtime image. The runtime-artifact is where the builder output is located. These files will be passed into the runtime image.
 
 1. Run the newly built image to start the application on your local machine in the background,
 
-    ```
+    ```bash
     docker run -d --rm -p 9080:9080 authors
     ```
 
 1. Check the container is running successfully,
 
-    ```
+    ```bash
     docker ps -a
     CONTAINER ID    IMAGE    COMMAND    CREATED    STATUS    PORTS    NAMES
     7ba756f5f45b    authors    "/opt/ol/helpers/run…"    5 seconds ago    Up 4 seconds    0.0.0.0:9080->9080/tcp, 9443/tcp    optimistic_elbakyan
@@ -187,7 +187,7 @@ In this section, we will use S2I to build our application container image and th
 
 1. Retrieve the authors using curl,
 
-    ```
+    ```bash
     curl -X GET "http://localhost:9080/api/v1/getauthor" -H "accept: application/json"
     ```
 
@@ -195,7 +195,7 @@ In this section, we will use S2I to build our application container image and th
 
 In the following steps we will be using two deployment strategies:
 
-* deploy as a traditional Kubernetes `Deployment`, and 
+* deploy as a traditional Kubernetes `Deployment`, and
 * build and deployment using templates, OpenShift `BuildConfig`, and `DeploymentConfig`.
 
 Now that we have the application running locally and have verified that it works, let's deploy it to an OpenShift environment.
@@ -204,7 +204,7 @@ Now that we have the application running locally and have verified that it works
 
     1. In preparation of this lab, you claimed a cluster that was created for you, and which is now available via your IBM Cloud dashboard,
     1. Browse to your assigned OpenShift cluster Overview page,
-    1. From the top right, open your `OpenShift web console` 
+    1. From the top right, open your `OpenShift web console`
 
         ![Open OpenShift Web Console](../.gitbook/images/lab-03/open-openshift-console.png)
 
@@ -249,7 +249,7 @@ For this method, we will deploy our application by creating a kubernetes deploym
     ```
 
     This command will add your newly pushed authors image to the deployment yaml file.
-  
+
     ```bash
     sed -i "s|APPLICATION_IMAGE|$IMAGE|" application.yaml
     ```
@@ -268,13 +268,13 @@ For this method, we will deploy our application by creating a kubernetes deploym
 
 7. Copy and paste the output of the previous command to set a variable $APP_URL,
 
-    ```
+    ```bash
     APP_URL=<get-routes-output>
     ```
 
 8. Test the application using curl
 
-    ```
+    ```bash
     curl -X GET "http://$APP_URL/api/v1/getauthor" -H "accept: application/json"
     ```
 
@@ -356,7 +356,7 @@ For this section, you will explore how to build and deploy our application using
 
     Or view the Build section of the OpenShift console.
 
-Now with our builds run, we can deploy our application. Previously we used a kubernetes deployment object to do this however this time we will use an OpenShift deployment configuration. 
+Now with our builds run, we can deploy our application. Previously we used a kubernetes deployment object to do this however this time we will use an OpenShift deployment configuration.
 
 Both objects are similar and will accomplish the same goals however with deployment configs you have greater control of your application's deployment behavior. You also have the option to set automated triggers to kick off builds and deploys based on image, configuration, or git repository changes. Due to a limitation in our workshop environment, we will not be exploring triggers and utilizing image streams with the integrated OpenShift registry, however, if you would like to take a look at a template that automates the entire build and deploy process with triggers, check out the [this example template](./exampleTemplate.yaml) found in the workshop repo.
 
@@ -402,7 +402,7 @@ Both objects are similar and will accomplish the same goals however with deploym
     oc get routes
     ```
 
-    ```
+    ```bash
     oc get routes
 
     NAME    HOST/PORT    PATH    SERVICES    PORT    TERMINATION    WILDCARD
@@ -410,7 +410,7 @@ Both objects are similar and will accomplish the same goals however with deploym
     authors2    authors2-default.your-roks-43-1n-cl-2bef1f4b4097001da9502000c44fc2b2-0000.us-south.containers.appdomain.cloud    authors2    9080    None
     ```
 
-1. Copy the route named `authors2` and add it to the end of the command below. 
+1. Copy the route named `authors2` and add it to the end of the command below.
 
     ```bash
     export API_URL=
@@ -435,12 +435,11 @@ Both objects are similar and will accomplish the same goals however with deploym
     {"name":"Oliver Rodriguez","twitter":"https://twitter.com/heres__ollie","blog":"https://developer.ibm.com"
     ```
 
-
 ### Optional: Customizing your application
 
 In this optional section we will create our own copy of the code push the changes to OpenShift.
 
-1. First we need to create your own version of the code repo by creating a fork. This will copy the repo into your GitHub account. Navigate to the lab repo at https://github.com/IBM/s2i-open-liberty-workshop and click on the **Fork** button in the upper right of the page.
+1. First we need to create your own version of the code repo by creating a fork. This will copy the repo into your GitHub account. Navigate to the lab repo at <https://github.com/IBM/s2i-open-liberty-workshop> and click on the **Fork** button in the upper right of the page.
 
 1. When the repo is done forking, click on the green **Clone or download** button and copy your git repo url.
 
@@ -459,15 +458,13 @@ In this optional section we will create our own copy of the code push the change
     cd s2i-open-liberty-workshop
     ```
 
+1. Now that we have our own copy, let's push a change and test it out. From your browser, navigate to the GitHub repo that you forked. Click on the **Branch** dropdown and select **conference**.
 
+1. Then navigate to the file at `web-app/src/main/java/com/ibm/authors/GetAuthor.java`
 
-2. Now that we have our own copy, let's push a change and test it out. From your browser, navigate to the GitHub repo that you forked. Click on the **Branch** dropdown and select **conference**. 
+1. Click on the pencil icon in the upper right of the code to enter editing mode.
 
-3. Then navigate to the file at `web-app/src/main/java/com/ibm/authors/GetAuthor.java`
-
-4. Click on the pencil icon in the upper right of the code to enter editing mode.
-
-5. On lines 56-59 edit the name, twitter, and blog to your own information or fake information if you'd like.
+1. On lines 56-59 edit the name, twitter, and blog to your own information or fake information if you'd like.
 
     ```java
     Author author = new Author();
@@ -476,9 +473,9 @@ In this optional section we will create our own copy of the code push the change
         author.blog = "http://developer.ibm.com";
     ```
 
-6. Scroll down and click on `Commit changes`.
+1. Scroll down and click on `Commit changes`.
 
-7. With the changes pushed, we can now rebuild and redeploy the application. Follow the following steps:
+1. With the changes pushed, we can now rebuild and redeploy the application. Follow the following steps:
 
     Build the builder image:
 
@@ -502,9 +499,9 @@ In this optional section we will create our own copy of the code push the change
     oc new-app --template authors-app -p DOCKER_USERNAME=$DOCKER_USERNAME -p APP_NAME=authors-3
     ```
 
-8. Once you have verified that the application is deployed and the new pod is running, enter the following command to view the application routes.
+1. Once you have verified that the application is deployed and the new pod is running, enter the following command to view the application routes.
 
-    ```
+    ```bash
     oc get routes
 
     NAME    HOST/PORT    PATH    SERVICES    PORT    TERMINATION    WILDCARD
@@ -512,7 +509,7 @@ In this optional section we will create our own copy of the code push the change
     authors2    authors2-default.your-roks-43-1n-cl-2bef1f4b4097001da9502000c44fc2b2-0000.us-south.containers.appdomain.cloud    authors2    9080    None
     ```
 
-9. Copy the route named `authors-3` and add it to the end of the command below.
+1. Copy the route named `authors-3` and add it to the end of the command below.
 
     ```bash
     export API_URL=
@@ -533,7 +530,7 @@ In this optional section we will create our own copy of the code push the change
 You should then see the info that you edited in the file earlier.
 
 ## Conclusion
-In this lab we have explored building our own custom s2i images for building containerized application from source code. We utilized a multi stage s2i process that separated the build environment from the runtime environment which allowed for us to have a slimmer application image. Then, we deployed the application as a traditional Kubernetes deployment. Lastly, we explored how to build and deploy the application using templates, OpenShift build configs, and deployment configs.
 
+In this lab we have explored building our own custom s2i images for building containerized application from source code. We utilized a multi stage s2i process that separated the build environment from the runtime environment which allowed for us to have a slimmer application image. Then, we deployed the application as a traditional Kubernetes deployment. Lastly, we explored how to build and deploy the application using templates, OpenShift build configs, and deployment configs.
 
 1. Go back to the [Summary](../SUMMARY.md).

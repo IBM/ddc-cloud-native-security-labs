@@ -1,17 +1,18 @@
-## Cloud Native Security
+# Cloud Native Security
 
 ## What is Cloud Native Security
 
 The Cloud Native Computing Foundation (CNCF) publishes the following [CNCF Cloud Native Definition v1.0](https://github.com/cncf/toc/blob/master/DEFINITION.md): "Cloud native technologies empower organizations to build and run scalable applications in modern, dynamic environments such as public, private, and hybrid clouds. Containers, service meshes, microservices, immutable infrastructure, and declarative APIs exemplify this approach."
 
-We take the liberty to roughly paraphrase that definition as containers, applications and tools running on a flavor of the Kubernetes platform. 
+We take the liberty to roughly paraphrase that definition as containers, applications and tools running on a flavor of the Kubernetes platform.
 
 Cloud Native Security in our view deals with securing applications and tools to secure the full Software Development Life Cycle (SDLC) and Continuous Integration and Continuous Deployment (CI/CD) on a flavor of the Kubernetes platform.
 
 For the Cloud Native Security Conference, we have defined 3 tracks:
-- Application Security,
-- Data Security, and
-- DevSecOps.
+
+* Application Security,
+* Data Security, and
+* DevSecOps.
 
 ## About this workshop
 

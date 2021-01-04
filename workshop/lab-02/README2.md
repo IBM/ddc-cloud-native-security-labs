@@ -1,12 +1,12 @@
-## Optional: Connect to MongoDB within a Java Spring Boot App
+# Optional: Connect to MongoDB within a Java Spring Boot App
 
 A sample Java Spring Boot application is provided as part of this repo to demonstrate how you can access a MongoDB database from a Java application.
 
 1. Open `cloud-native-security-master/workshop/lab-02/java/src/main/resources/application.properties` file in a file editor.
 
-2. Change its contents to reflect your MongoDB connection information. For example,
+1. Change its contents to reflect your MongoDB connection information. For example,
 
-    ```
+    ```ini
     spring.data.mongodb.authentication-database=admin
     spring.data.mongodb.username=user1
     spring.data.mongodb.password=passw0rd
@@ -16,23 +16,23 @@ A sample Java Spring Boot application is provided as part of this repo to demons
     spring.data.mongodb.uri=mongodb://user1:passw0rd@mongodb:27017/mydb
     ```
 
-3. Save the changes.
+1. Save the changes.
 
-4. In `Cloud Shell`, navigate to the sample app folder.
+1. In `Cloud Shell`, navigate to the sample app folder.
 
-    ```
-    $ cd cloud-native-security-master/workshop/lab-02/java 
-    ```
-
-5. Run the sample application.
-
-    ```
-    $ ./mvnw spring-boot:run
+    ```bash
+    cd cloud-native-security-master/workshop/lab-02/java
     ```
 
- 1. If your sample application is executed successfully, you should find the following information toward the end of its output.
+1. Run the sample application.
 
+    ```bash
+    ./mvnw spring-boot:run
     ```
+
+1. If your sample application is executed successfully, you should find the following information toward the end of its output.
+
+    ```bash
     Start working with Mongo DB
 
     Clean up any existing customer data:
@@ -59,30 +59,30 @@ A sample Java Spring Boot application is provided as part of this repo to demons
     End working with Mongo DB
     ```
 
-### Optional Verification
+## Optional Verification
 
 You can verify the data entry via the sample Java app through mongoDB shell.
 
 1. Execute the same query as you did in the previous sections, you retrieve two different data entries.
 
-    ```
+    ```sql
     > db.customer.find( { lastName: "Smith" } )
 
     { "_id" : ObjectId("5ed1eaaca03193778dd6521a"), "firstName" : "Alice", "lastName" : "Smith", "_class" : "com.example.accessingdatamongodb.Customer" }
     { "_id" : ObjectId("5ed1eaaca03193778dd6521b"), "firstName" : "Bob", "lastName" : "Smith", "_class" : "com.example.accessingdatamongodb.Customer" }
     ```
 
-If you are interested in verify the data persistency of the mongoDB database, you may remove the mongoDB from the IKS cluster and install it again. 
+If you are interested in verify the data persistency of the mongoDB database, you may remove the mongoDB from the IKS cluster and install it again.
 
 1. Remove `mongodb` deployment.
 
-    ```
+    ```bash
     helm delete mongodb
     ```
 
 1. Re-deploy `mongodb` to IKS cluster.
 
-    ```
+    ```bash
     helm install mongodb bitnami/mongodb --set persistence.enabled=true --set persistence.existingClaim=my-iks-pvc --set livenessProbe.initialDelaySeconds=180 --set mongodbRootPassword=passw0rd --set mongodbUsername=user1 --set mongodbPassword=passw0rd --set mongodbDatabase=mydb --set service.type=NodePort --set service.nodePort=30001
     ```
 
@@ -93,4 +93,3 @@ After `mongodb` redeployment, you can verify the existing data in the mongoDB da
 Congratulation! You have successfully deployed a MongoDB server to IKS cluster and `persistant its data` in IBM Cloud Object Storage. Becuase the IBM Cloud Object Storage offers data encryption and other rich security features out of box, you achieved `data-in-rest` objective.
 
 There are many options to run a database in Cloud environment. The repo does not suggest one way is better than another. The use case in this repo is to demonstrate `data-in-rest` via IBM Cloud Object Storage.
-

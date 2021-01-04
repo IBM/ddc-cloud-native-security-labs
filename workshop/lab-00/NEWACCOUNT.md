@@ -1,14 +1,14 @@
-## IBM Cloud - Create a New Account
+# IBM Cloud - Create a New Account
 
 To create a new account, follow the steps below,
 
 1. You need an IBM Cloud account to access your cluster,
-1. If you do not have an IBM Cloud account yet, go to https://cloud.ibm.com/registration to register,
+1. If you do not have an IBM Cloud account yet, go to <https://cloud.ibm.com/registration> to register,
 1. In the `Create an account` window, enter your email and password,
 
     ![IBM Cloud Registration](../.gitbook/images/register/create-account.png)
 
-1. The `Verify email` section will inform you that a verification code was sent to your email, 
+1. The `Verify email` section will inform you that a verification code was sent to your email,
 
     ![IBM Cloud Registration](../.gitbook/images/register/verify-email.png)
 
@@ -20,7 +20,7 @@ To create a new account, follow the steps below,
 
     ![IBM Cloud Registration](../.gitbook/images/register/verify-email.png)
 
-1. Enter your first name, last name and country in the `Personal information` section and click `Next`, 
+1. Enter your first name, last name and country in the `Personal information` section and click `Next`,
 
     ![IBM Cloud Registration](../.gitbook/images/register/personal-information.png)
 

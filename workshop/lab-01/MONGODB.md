@@ -1,26 +1,26 @@
-### Deploy MongoDB to IKS Cluster and Persist its Datastore in IBM Cloud Object Storage
+# Deploy MongoDB to IKS Cluster and Persist its Datastore in IBM Cloud Object Storage
 
 In this section, you are going to deploy an instance of MongoDB to your IKS cluster. We will disable persistence for simplicity.
 
-1. To install the Bitnami/MongoDB chart, you need Helm v3. At the time of writing, by default, Helm v2.16 was installed on the `Cloud Shell`. 
+1. To install the Bitnami/MongoDB chart, you need Helm v3. At the time of writing, by default, Helm v2.16 was installed on the `Cloud Shell`.
 
 1. In the `Cloud Shell`, download and unzip Helm v3.
 
-    ```
-    $ wget https://get.helm.sh/helm-v3.2.0-linux-amd64.tar.gz
-    $ tar -zxvf helm-v3.2.0-linux-amd64.tar.gz
+    ```bash
+    wget https://get.helm.sh/helm-v3.2.0-linux-amd64.tar.gz
+    tar -zxvf helm-v3.2.0-linux-amd64.tar.gz
     ```
 
 1. Make Helm v3 CLI available in your `PATH` environment variable.
 
-    ```
-    $ echo 'export PATH=$HOME/linux-amd64:$PATH' > .bash_profile
-    $ source .bash_profile
+    ```bash
+    echo 'export PATH=$HOME/linux-amd64:$PATH' > .bash_profile
+    source .bash_profile
     ```
 
 1. Verify Helm v3 installation.
 
-    ```
+    ```bash
     $ helm version --short
 
     v3.2.0+ge11b7ce
@@ -28,7 +28,7 @@ In this section, you are going to deploy an instance of MongoDB to your IKS clus
 
 1. Add the bitnami Helm repository to your repositories and update the local repository.
 
-    ```
+    ```bash
     $ helm repo add bitnami https://charts.bitnami.com/bitnami
     "bitnami" has been added to your repositories
 
@@ -38,9 +38,9 @@ In this section, you are going to deploy an instance of MongoDB to your IKS clus
     Update Complete. ⎈ Happy Helming!⎈
     ```
 
-2. Now, install MongoDB using helm with the following parameters. Note, that I am deliberately opening NodePort for MongoDB for the purpose of the lab.
+1. Now, install MongoDB using helm with the following parameters. Note, that I am deliberately opening NodePort for MongoDB for the purpose of the lab.
 
-    ```
+    ```bash
     $ helm install mongodb --set persistence.enabled=false,livenessProbe.initialDelaySeconds=180,usePassword=true,mongodbRootPassword=passw0rd,mongodbUsername=user1,mongodbPassword=passw0rd,mongodbDatabase=mydb bitnami/mongodb --set service.type=NodePort,service.nodePort=30001
 
     NAME: mongodb
@@ -72,20 +72,20 @@ In this section, you are going to deploy an instance of MongoDB to your IKS clus
         kubectl port-forward --namespace default svc/mongodb 27017:27017 & mongo --host 127.0.0.1 --authenticationDatabase admin -p $MONGODB_ROOT_PASSWORD
     ```
 
-3. Note, the service type for MongoDB is set to `NodePort` with the Helm parameter `--set service.type=NodePort`, and the nodePort value is set to `30001`. Normally, you will set MongoDB to be accessed only within the cluster using the type `ClusterIP`.
+1. Note, the service type for MongoDB is set to `NodePort` with the Helm parameter `--set service.type=NodePort`, and the nodePort value is set to `30001`. Normally, you will set MongoDB to be accessed only within the cluster using the type `ClusterIP`.
 
-4. Patch the NodePort to type `LoadBalancer` for ease of use, cause it will give you an External IP, and it will allow you to do a simple liveness test.
+1. Patch the NodePort to type `LoadBalancer` for ease of use, cause it will give you an External IP, and it will allow you to do a simple liveness test.
 
-    ```
+    ```bash
     $ kubectl patch svc mongodb -p '{"spec": {"type": "LoadBalancer"}}'
     service/mongodb patched
     ```
 
-5. As mentioned before, in a production environment you don't want to allow external access to your database.
+1. As mentioned before, in a production environment you don't want to allow external access to your database.
 
-6. Retrieve and save MongoDB passwords in environment variables.
+1. Retrieve and save MongoDB passwords in environment variables.
 
-    ```
+    ```bash
     $ export MONGODB_ROOT_PASSWORD=$(kubectl get secret --namespace default mongodb -o jsonpath="{.data.mongodb-root-password}" | base64 --decode)
 
     $ export MONGODB_PASSWORD=$(kubectl get secret --namespace default mongodb -o jsonpath="{.data.mongodb-password}" | base64 --decode)
@@ -97,9 +97,9 @@ In this section, you are going to deploy an instance of MongoDB to your IKS clus
     passw0rd
     ```
 
-7. Verify the MongoDB deployment.
+1. Verify the MongoDB deployment.
 
-    ```
+    ```bash
     $ kubectl get deployment
 
     NAME      READY   UP-TO-DATE   AVAILABLE   AGE
@@ -108,9 +108,9 @@ In this section, you are going to deploy an instance of MongoDB to your IKS clus
 
     > Note: It may take 1 to 2 minutes until the deployment is completed and the container initialized, wait till the READY state is 1/1
 
-8. Verify that pods are running.
+1. Verify that pods are running.
 
-    ```
+    ```bash
     $ kubectl get pod
 
     NAME                      READY   STATUS    RESTARTS   AGE
@@ -119,19 +119,19 @@ In this section, you are going to deploy an instance of MongoDB to your IKS clus
 
     > Note: It may take a few minutes until the deployment is completed and pod turns to `Running` state.
 
-    ```
+    ```bash
     $ kubectl get svc mongodb
     NAME      TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)           AGE
     mongodb   LoadBalancer   172.21.97.193   169.48.67.164   27017:30001/TCP   39s
     ```
 
-9.  try to connect to MongoDB using the EXTERNAL IP and NodePort of your `mongodb` service, retrieved in the previous step: 
+1. try to connect to MongoDB using the EXTERNAL IP and NodePort of your `mongodb` service, retrieved in the previous step:
 
-    ```
+    ```bash
     $ curl http://169.48.67.164:30001
     It looks like you are trying to access MongoDB over HTTP on the native driver port.
     ```
 
-10. The reply `It looks like you are trying to access MongoDB over HTTP on the native driver port.` means that you hit the MongoDB service, which in its turn does not allow `http` access.
+1. The reply `It looks like you are trying to access MongoDB over HTTP on the native driver port.` means that you hit the MongoDB service, which in its turn does not allow `http` access.
 
 Go back to the [Lab](README.md) and continue with the next step to deploy the HelloWorld application.
