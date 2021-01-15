@@ -1,0 +1,1656 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <meta name="author" content="IBM Developer">
+      
+      
+        <link rel="canonical" href="https://ibm.github.io/ddc-cloud-native-security-labs/lab-02/">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.4">
+    
+    
+      
+        <title>Lab 2. Adding Secure Storage - Cloud Native Security Labs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.15aa0b43.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.75751829.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#2094f3">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,400i,700%7CIBM+Plex+Mono&display=fallback">
+        <style>body,input{font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"IBM Plex Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab02-adding-secure-encrypted-object-storage-using-a-persistent-volume-for-mongodb-with-s3fs-fuse" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://ibm.github.io/ddc-cloud-native-security-labs" title="Cloud Native Security Labs" class="md-header-nav__button md-logo" aria-label="Cloud Native Security Labs">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            Cloud Native Security Labs
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              Lab 2. Adding Secure Storage
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/ibm/ddc-cloud-native-security-labs/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ddc-cloud-native-security-labs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        Welcome
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../lab-00/" class="md-tabs__link md-tabs__link--active">
+        Workshop
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../resources/" class="md-tabs__link">
+        References
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://ibm.github.io/ddc-cloud-native-security-labs" title="Cloud Native Security Labs" class="md-nav__button md-logo" aria-label="Cloud Native Security Labs">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Cloud Native Security Labs
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/ibm/ddc-cloud-native-security-labs/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ddc-cloud-native-security-labs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1" >
+    
+    <label class="md-nav__link" for="nav-1">
+      Welcome
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Welcome" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        <span class="md-nav__icon md-icon"></span>
+        Welcome
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href=".." class="md-nav__link">
+      About the workshop
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../lab-00/NEWACCOUNT/" class="md-nav__link">
+      Create an IBM Cloud account
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  
+
+
+  
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      Workshop
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Workshop" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon"></span>
+        Workshop
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../lab-00/" class="md-nav__link">
+      Workshop Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../lab-01/" class="md-nav__link">
+      Lab 1. Kubernetes Networking
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Lab 2. Adding Secure Storage
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Lab 2. Adding Secure Storage
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pre-requisites" class="md-nav__link">
+    Pre-requisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-ibm-cloud-object-storage" class="md-nav__link">
+    Overview of IBM Cloud Object Storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-ibm-cloud-object-storage-plugin" class="md-nav__link">
+    Overview of IBM Cloud Object Storage Plugin
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview of IBM Cloud Object Storage Plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ibm-cloud-shell" class="md-nav__link">
+    IBM Cloud Shell
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab" class="md-nav__link">
+    Lab
+  </a>
+  
+    <nav class="md-nav" aria-label="Lab">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-helm-v3" class="md-nav__link">
+    Installing Helm v3
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preparing-ibm-cloud-object-storage-service-instance" class="md-nav__link">
+    Preparing IBM Cloud Object Storage Service Instance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-ibm-cloud-object-storage-plugin" class="md-nav__link">
+    Installing IBM Cloud Object Storage Plugin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-ibm-cloud-object-storage-plugin" class="md-nav__link">
+    Configuring IBM Cloud Object Storage Plugin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-the-object-storage-configuration" class="md-nav__link">
+    Review the Object Storage Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-bucket" class="md-nav__link">
+    Create Bucket
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-persistentvolumeclaim" class="md-nav__link">
+    Create the PersistentVolumeClaim
+  </a>
+  
+    <nav class="md-nav" aria-label="Create the PersistentVolumeClaim">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-mongodb-to-iks-cluster-and-persist-its-datastore-in-ibm-cloud-object-storage" class="md-nav__link">
+    Deploy MongoDB to IKS Cluster and Persist its Datastore in IBM Cloud Object Storage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-mongodb-deployment" class="md-nav__link">
+    Verify MongoDB Deployment
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../lab-03/" class="md-nav__link">
+      Lab 3. Source-to-Image (S2I)
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
+    
+    <label class="md-nav__link" for="nav-3">
+      References
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="References" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon"></span>
+        References
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../resources/" class="md-nav__link">
+      Additional resources
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pre-requisites" class="md-nav__link">
+    Pre-requisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-ibm-cloud-object-storage" class="md-nav__link">
+    Overview of IBM Cloud Object Storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-ibm-cloud-object-storage-plugin" class="md-nav__link">
+    Overview of IBM Cloud Object Storage Plugin
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview of IBM Cloud Object Storage Plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ibm-cloud-shell" class="md-nav__link">
+    IBM Cloud Shell
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab" class="md-nav__link">
+    Lab
+  </a>
+  
+    <nav class="md-nav" aria-label="Lab">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-helm-v3" class="md-nav__link">
+    Installing Helm v3
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preparing-ibm-cloud-object-storage-service-instance" class="md-nav__link">
+    Preparing IBM Cloud Object Storage Service Instance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-ibm-cloud-object-storage-plugin" class="md-nav__link">
+    Installing IBM Cloud Object Storage Plugin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-ibm-cloud-object-storage-plugin" class="md-nav__link">
+    Configuring IBM Cloud Object Storage Plugin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-the-object-storage-configuration" class="md-nav__link">
+    Review the Object Storage Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-bucket" class="md-nav__link">
+    Create Bucket
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-persistentvolumeclaim" class="md-nav__link">
+    Create the PersistentVolumeClaim
+  </a>
+  
+    <nav class="md-nav" aria-label="Create the PersistentVolumeClaim">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-mongodb-to-iks-cluster-and-persist-its-datastore-in-ibm-cloud-object-storage" class="md-nav__link">
+    Deploy MongoDB to IKS Cluster and Persist its Datastore in IBM Cloud Object Storage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-mongodb-deployment" class="md-nav__link">
+    Verify MongoDB Deployment
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/ibm/ddc-cloud-native-security-labs/edit/master/docs/lab-02/README.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="lab02-adding-secure-encrypted-object-storage-using-a-persistent-volume-for-mongodb-with-s3fs-fuse">Lab02 - Adding Secure Encrypted Object Storage using a Persistent Volume for MongoDB with S3FS-Fuse<a class="headerlink" href="#lab02-adding-secure-encrypted-object-storage-using-a-persistent-volume-for-mongodb-with-s3fs-fuse" title="Permanent link">&para;</a></h1>
+<h2 id="pre-requisites">Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permanent link">&para;</a></h2>
+<p>Before starting the exercise, you need to have</p>
+<ul>
+<li>an IBM Cloud account</li>
+<li>an instance of IBM Kubernetes Service (<a href="https://cloud.ibm.com/kubernetes/catalog/create">https://cloud.ibm.com/kubernetes/catalog/create</a>)</li>
+<li>an instance of IBM Cloud Object Storage (<a href="https://cloud.ibm.com/catalog/services/cloud-object-storage">https://cloud.ibm.com/catalog/services/cloud-object-storage</a>)</li>
+<li>access to the IBM Cloud Shell,</li>
+</ul>
+<h2 id="overview-of-ibm-cloud-object-storage">Overview of IBM Cloud Object Storage<a class="headerlink" href="#overview-of-ibm-cloud-object-storage" title="Permanent link">&para;</a></h2>
+<p>An important part of data security and persistence on Kubernetes depends on physical storage outside the container orchestration engine that Kubernetes is. You can use PersistentVolume and PersistentVolumeClaim to map data directories to external physical storage. But also, data persistence on a stateless platform like Kubernetes should require extra attention.</p>
+<p>IBM Cloud Object Storage (COS) offers a few exceptional features that help secure data on Kubernetes. IBM Cloud Object Storage (COS) actively participates in several industry compliance programs and provides the following compliance, certifications, attestations, or reports as measure of proof:</p>
+<ul>
+<li>ISO 27001,</li>
+<li>PCI-DSS for Payment Card Industry (PCI) USA,</li>
+<li>HIPAA for Healthcare USA, (including administrative, physical, and technical safeguards required of Business Associates in 45 CFR Part 160 and Subparts A and C of Part 164),</li>
+<li>ISO 22301 Business Continuity Management,</li>
+<li>ISO 27017,</li>
+<li>ISO 27018,</li>
+<li>ISO 31000 Risk Management Principles,</li>
+<li>ISO 9001 Quality Management System,</li>
+<li>SOC1 Type 2 (SSAE 16), (System and Organization Controls 1),</li>
+<li>SOC2 Type 2 (SSAE 16), (System and Organization Controls 2),</li>
+<li>CSA STAR Level 1 (Self-Assessment),</li>
+<li>General Data Protection Regulation (GDPR) ready,</li>
+<li>Privacy shield certified.</li>
+</ul>
+<p>At a high level, information on IBM Cloud Object Storage (COS) is encrypted, then dispersed across multiple geographic locations, and accessed over popular protocols like HTTP with a RESTful API.</p>
+<p>SecureSlice distributes the data in slices across geo locations so that no full copy of data exists on any individual storage node, and automatically encrypts each segment of data before it is erasure coded and dispersed.</p>
+<p>The content can only be re-assembled through IBM Cloud’s <code>Accesser</code> technology at the client’s primary data center, where the data was originally received, and decrypted again by SecureSlice.</p>
+<p><code>Data-in-place</code> or <code>data-at-rest</code> security is ensured when you persist database contents in IBM Cloud Object Storage.</p>
+<p>You also have a choice to use integration capabilities with IBM Cloud Key Management Services like IBM Key Protect (using FIPS 140-2 Level 3 certified hardware security modules (HSMs)) and Hyper Protect Crypto Services (built on FIPS 140-2 Level 4-certified hardware) for enhanced security features and compliance.</p>
+<h2 id="overview-of-ibm-cloud-object-storage-plugin">Overview of IBM Cloud Object Storage Plugin<a class="headerlink" href="#overview-of-ibm-cloud-object-storage-plugin" title="Permanent link">&para;</a></h2>
+<p>This lab uses the <a href="https://github.com/IBM/ibmcloud-object-storage-plugin">IBM Cloud Object Storage plugin</a> to connect an encrypted Object Storage to the Kubernetes cluster via <code>PersistentVolume</code>. A MongoDB database is setup that persists its data to a highly encrypted IBM <code>Cloud Object Storage</code> through PersistentVolume. A sample Java Spring Boot application stores its data in the MongoDB database and its data gets encrypted and persisted.</p>
+<p><code>IBM Cloud Object Storage plugin</code> is a Kubernetes volume plugin that enables Kubernetes pods to access IBM Cloud Object Storage buckets. The plugin has two components: a dynamic provisioner and a FlexVolume driver for mounting the buckets using <code>s3fs-fuse</code> on a worker node.</p>
+<p><a href="https://github.com/s3fs-fuse/s3fs-fuse"><code>s3fs</code></a> allows Linux and macOS to mount an S3 bucket via FUSE.</p>
+<p><img alt="arch" src="../assets/images/cos-plugin-architecture.png" /></p>
+<h3 id="ibm-cloud-shell">IBM Cloud Shell<a class="headerlink" href="#ibm-cloud-shell" title="Permanent link">&para;</a></h3>
+<p>The <code>IBM Cloud Shell</code> is a web-based terminal running as a container on a Kubernetes cluster in the IBM Cloud. It provides common CLIs when you work with container, kubernetes and OpenShift related technologies. The steps in this exercise are written and tested in the <code>Cloud Shell</code> environment.</p>
+<h2 id="lab">Lab<a class="headerlink" href="#lab" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Login to <a href="https://cloud.ibm.com">IBM Cloud</a>.</p>
+</li>
+<li>
+<p>Start an instance of <code>Cloud Shell</code> by either clicking its icon at the top-right corner of the screen or using the url <code>https://shell.cloud.ibm.com</code> in a new browser tab.</p>
+<blockquote>
+<p>Note: most of steps in this exercise will be performed in <code>Cloud Shell</code>.
+Important: A <code>Cloud Shell</code> session times out after it's idle for more than 60 minutes. When a <code>Cloud Shell</code> session times out, you'll lose every work that was performed during the session, if it's not persistent. For example, any CLI tool installation in a <code>Cloud Shell</code> will be lost after the session expires. Cloud Shell is a shell environment running in a container.</p>
+</blockquote>
+</li>
+<li>
+<p>In the <code>Cloud Shell</code>, login to IBM Cloud from the CLI tool.</p>
+<div class="highlight"><pre><span></span><code>ibmcloud login
+</code></pre></div>
+<p>or if using Single Sign On,</p>
+<div class="highlight"><pre><span></span><code>ibmcloud login -sso
+</code></pre></div>
+</li>
+<li>
+<p>Retieve your cluster information.</p>
+<div class="highlight"><pre><span></span><code>$ ibmcloud ks clusters
+
+Name                              ID                     State    Created        Workers   Location          Version                   Resource Group Name   Provider
+yourcluster                       br78vuhd069a00er8s9g   normal   <span class="m">1</span> day ago      <span class="m">1</span>         Dallas            <span class="m">1</span>.16.10_1533              default               classic
+</code></pre></div>
+</li>
+<li>
+<p>For your convenience, store your IKS cluster name in a environment variable <code>CLUSTERNAME</code> for future reference.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">CLUSTERNAME</span><span class="o">=</span>&lt;your cluster name&gt;
+</code></pre></div>
+</li>
+<li>
+<p>Connect to your cluster instance.</p>
+<div class="highlight"><pre><span></span><code>$ ibmcloud ks cluster config --cluster <span class="nv">$CLUSTERNAME</span>
+
+Added context <span class="k">for</span> leez-iks-1node to the current kubeconfig file.
+You can now execute <span class="s1">&#39;kubectl&#39;</span> commands against your cluster. For example, run <span class="s1">&#39;kubectl get nodes&#39;</span>.
+</code></pre></div>
+</li>
+<li>
+<p>Verify the connection to your cluster.</p>
+<div class="highlight"><pre><span></span><code>kubectl config current-context
+kubectl get nodes
+</code></pre></div>
+</li>
+</ol>
+<h3 id="installing-helm-v3">Installing Helm v3<a class="headerlink" href="#installing-helm-v3" title="Permanent link">&para;</a></h3>
+<p>You are going to install <code>IBM Cloud Object Storage Plugin</code> via Helm v3 CLI. At the time of writing, by default, Helm v2.16 was installed on the <code>Cloud Shell</code>.</p>
+<ol>
+<li>
+<p>In the <code>Cloud Shell</code>, download and unzip Helm v3.2.</p>
+<div class="highlight"><pre><span></span><code>wget https://get.helm.sh/helm-v3.2.0-linux-amd64.tar.gz
+tar -zxvf helm-v3.2.0-linux-amd64.tar.gz
+</code></pre></div>
+</li>
+<li>
+<p>Make Helm v3 CLI available in your <code>PATH</code> environment variable.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span> <span class="s1">&#39;export PATH=$HOME/linux-amd64:$PATH&#39;</span> &gt; .bash_profile
+<span class="nb">source</span> .bash_profile
+</code></pre></div>
+</li>
+<li>
+<p>Verify Helm v3 installation.</p>
+<div class="highlight"><pre><span></span><code>$ helm version --short
+
+v3.2.0+ge11b7ce
+</code></pre></div>
+</li>
+</ol>
+<h3 id="preparing-ibm-cloud-object-storage-service-instance">Preparing IBM Cloud Object Storage Service Instance<a class="headerlink" href="#preparing-ibm-cloud-object-storage-service-instance" title="Permanent link">&para;</a></h3>
+<p>If you have an existing <code>IBM Cloud Object Storage</code> service instance, you can use it for the remaining of the exercise.</p>
+<ol>
+<li>
+<p>If you don't have any <code>IBM Cloud Object Storage</code> service instance or prefer to create a new instance for this exercise, go to <a href="https://cloud.ibm.com/catalog/services/cloud-object-storage">https://cloud.ibm.com/catalog/services/cloud-object-storage</a> and create a Lite plan of Cloud Object Storage for free. You can only have 1 single free Lite instance per account.</p>
+</li>
+<li>
+<p>Note, that if you are using a pre-created cluster you are now logged into a different account than your personal account, because the other account is where the clusters were created for you. On this other account you do not have permission to create new services, so switch to your personal account first before you create the new service.</p>
+<p><img alt="IBMCloud Switch Accounts" src="../assets/images/ibmcloud-switch-accounts.png" /></p>
+</li>
+<li>
+<p>If you are using the CLI to create a new service, in the <code>Cloud Shell</code> open a new session, and login to your personal account,</p>
+<p><img alt="IBMCloud new shell session" src="../assets/images/ibmcloud-new-shell-session.png" /></p>
+</li>
+<li>
+<p>You also need a resource group at the time of writing, but none was created when you created a new account recently yet,</p>
+<p>Check if you already have a resource-group</p>
+<div class="highlight"><pre><span></span><code>ibmcloud resource groups
+OK
+Name      ID                                 Default Group   State
+Default   282d2f25256540499cf99b43b34025bf   <span class="nb">true</span>            ACTIVE
+</code></pre></div>
+<p>If you do not have a resource group yet, create one,</p>
+<div class="highlight"><pre><span></span><code>$ ibmcloud resource group-create Default
+Creating resource group Default under account 5081ea1988f14a66a3ddf9d7fb3c6b29 as remko@remkoh.dev...
+OK
+Resource group Default was created.
+Resource Group ID: 93f7a4cd3c824c0cbe90d8f21b46f758
+</code></pre></div>
+</li>
+<li>
+<p>Create a new Object Storage instance via CLI command, for the lab you can use a <code>Lite</code> plan.</p>
+<div class="highlight"><pre><span></span><code>ibmcloud resource service-instance-create &lt;instance-name&gt; cloud-object-storage &lt;plan&gt; global -g Default
+</code></pre></div>
+<p>For example,</p>
+<div class="highlight"><pre><span></span><code>$ ibmcloud resource service-instance-create cos-securityconference cloud-object-storage Lite global -g Default
+
+OK
+Service instance cos-securityconference was created.
+Name:             cos-securityconference
+ID:               crn:v1:bluemix:public:cloud-object-storage:global:a/
+                    e65910fa61ce9072d64902d03f3d4774:fef2d369-5f88-4dcc-bbf1-9afffcd9ccc7::
+GUID:             fef2d369-5f88-4dcc-bbf1-9afffcd9ccc7
+Location:         global
+State:            active
+Type:             service_instance
+Sub Type:
+Allow Cleanup:    <span class="nb">false</span>
+Locked:           <span class="nb">false</span>
+Created at:       <span class="m">2020</span>-05-29T15:55:26Z
+Updated at:       <span class="m">2020</span>-05-29T15:55:26Z
+Last Operation:
+              Status    create succeeded
+              Message   Completed create instance operation
+</code></pre></div>
+</li>
+<li>
+<p>Now you need to add credentials.</p>
+</li>
+<li>
+<p>You can do this from the CLI,</p>
+<div class="highlight"><pre><span></span><code>ibmcloud resource service-key-create my-cos-lab2-credentials Writer --instance-name <span class="s2">&quot;cos-securityconference&quot;</span> --parameters <span class="s1">&#39;{&quot;HMAC&quot;:true}&#39;</span>
+
+ibmcloud resource service-key my-cos-lab2-credentials
+</code></pre></div>
+</li>
+<li>
+<p>Or via the web UI. In a browser, navigate to <code>https://cloud.ibm.com/resources</code> which shows a list of your services providioned in your cloud account.</p>
+</li>
+<li>
+<p>Expand the <code>Storage</code> section.</p>
+</li>
+<li>
+<p>Locate and select your <code>IBM Cloud Object Storage</code> service instance.</p>
+</li>
+</ol>
+<p><img alt="cos" src="../assets/images/cos-01.png" /></p>
+<ol>
+<li>Navigate to the <code>Service credentials</code> tab.</li>
+</ol>
+<p><img alt="cos" src="../assets/images/cos-02.png" /></p>
+<ol>
+<li>
+<p>Click on <code>New credential</code> button.</p>
+</li>
+<li>
+<p>Change the name to reference the Cloud Object Storage, e.g. <code>my-cos-lab2-credentials</code></p>
+</li>
+<li>
+<p>For <code>Role</code> accept <code>Writer</code>,</p>
+</li>
+<li>
+<p>Accept all other default settings, and select <code>Add</code> to create a new one.</p>
+</li>
+<li>
+<p>Expand your new service credentials, you will need the credentials to configure the persistent volume later, and take a note of</p>
+<ul>
+<li><code>apikey</code> in your <code>Service credential</code> and</li>
+<li><code>name</code> of your <code>IBM Cloud Object Storage</code> service instance.</li>
+</ul>
+</li>
+</ol>
+<p><img alt="cos" src="../assets/images/cos-03.png" /></p>
+<ol>
+<li>For your convenience, in the <code>Cloud Shell</code> store information in environment variables, store the Object Storage service name in <code>COS_SERVICE</code> and the credentials apikey in <code>COS_APIKEY</code>. Store each environment variable in cloud shell sessions for both accounts if you are using both your personal account and the pre-created account.</li>
+</ol>
+<p>In the <code>Cloud Shell</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">COS_SERVICE</span><span class="o">=</span>cos-securityconference
+<span class="nb">export</span> <span class="nv">COS_APIKEY</span><span class="o">=</span>H4pWU7tKDIA0D95xQrDPmjwvA5JB4CuHXbCAn6I6bg5H
+</code></pre></div>
+<blockquote>
+<p>Note: replace the example values with your own!</p>
+</blockquote>
+<ol>
+<li>
+<p>Retrieve <code>GUID</code> of your <code>IBM Cloud Object Storage</code> service instance. Note, that you should open a separate session in the cloud shell and be logged in to your own personal account. You have to be logged in to the account where the COS instance was created.</p>
+<div class="highlight"><pre><span></span><code>$ ibmcloud resource service-instance <span class="nv">$COS_SERVICE</span> <span class="p">|</span> grep GUID
+
+GUID:                  fef2d369-5f88-4dcc-bbf1-9afffcd9ccc7
+</code></pre></div>
+</li>
+<li>
+<p>For your convenience, store information in environment variable <code>COS_GUID</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">COS_GUID</span><span class="o">=</span>fef2d369-5f88-4dcc-bbf1-9afffcd9ccc7
+</code></pre></div>
+<blockquote>
+<p>Note: replace the example value with your own GUID.</p>
+</blockquote>
+</li>
+<li>
+<p>From the <code>Cloud Shell</code> logged in to the account where your cluster was created, create a <code>Kubernetes Secret</code> to store the COS service credentials named <code>cos-write-access</code>.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl create secret generic cos-write-access --type<span class="o">=</span>ibm/ibmc-s3fs --from-literal<span class="o">=</span>api-key<span class="o">=</span><span class="nv">$COS_APIKEY</span> --from-literal<span class="o">=</span>service-instance-id<span class="o">=</span><span class="nv">$COS_GUID</span>
+
+secret/cos-write-access created
+</code></pre></div>
+</li>
+</ol>
+<h3 id="installing-ibm-cloud-object-storage-plugin">Installing IBM Cloud Object Storage Plugin<a class="headerlink" href="#installing-ibm-cloud-object-storage-plugin" title="Permanent link">&para;</a></h3>
+<p>You are going to install the <code>IBM Cloud Object Storage Plugin</code> in your cluster, using the Helm CLI tool in this section.</p>
+<ol>
+<li>
+<p>In the <code>Cloud Shell</code> with access to your remote cluster, add a Helm repository where <code>IBM Cloud Object Storage Plugin</code> chart resides.</p>
+<div class="highlight"><pre><span></span><code>$ helm repo add ibm-charts https://icr.io/helm/ibm-charts
+
+<span class="sb">`</span>ibm-charts<span class="sb">`</span> has been added to your repositories
+</code></pre></div>
+</li>
+<li>
+<p>Refresh your local Helm repository.</p>
+<div class="highlight"><pre><span></span><code>$ helm repo update
+
+Hang tight <span class="k">while</span> we grab the latest from your chart repositories...
+...Successfully got an update from the <span class="s2">&quot;ibm-charts&quot;</span> chart repository
+Update Complete. ⎈ Happy Helming!⎈
+</code></pre></div>
+</li>
+<li>
+<p>Download and unzip the <code>IBM Cloud Object Storage</code> plugin to your client, then install the plugin to your cluster from local client.</p>
+<div class="highlight"><pre><span></span><code>$ helm pull --untar ibm-charts/ibm-object-storage-plugin
+$ ls -al
+$ helm plugin install ./ibm-object-storage-plugin/helm-ibmc
+
+Installed plugin: ibmc
+</code></pre></div>
+</li>
+<li>
+<p>Housekeeping to allow execution of the <code>ibmc.sh</code> script by making the file executable.</p>
+<div class="highlight"><pre><span></span><code>chmod <span class="m">755</span> <span class="nv">$HOME</span>/.local/share/helm/plugins/helm-ibmc/ibmc.sh
+</code></pre></div>
+</li>
+<li>
+<p>Verify the <code>IBM Cloud Object Storage</code> installation. The plugin usage information should be displayed when running the command below.</p>
+<div class="highlight"><pre><span></span><code>helm ibmc --help
+</code></pre></div>
+</li>
+</ol>
+<h3 id="configuring-ibm-cloud-object-storage-plugin">Configuring IBM Cloud Object Storage Plugin<a class="headerlink" href="#configuring-ibm-cloud-object-storage-plugin" title="Permanent link">&para;</a></h3>
+<p>Before using the <code>IBM Cloud Object Storage Plugin</code>, configuration changes are required.</p>
+<ol>
+<li>
+<p>In the <code>Cloud Shell</code> where you downloaded the IBM Cloud Object Storage plugin, navigate to the templates folder of the <code>IBM Cloud Object Storage Plugin</code> installation.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ibm-object-storage-plugin/templates <span class="o">&amp;&amp;</span> ls -al
+</code></pre></div>
+</li>
+<li>
+<p>Make sure the <code>provisioner-sa.yaml</code> file is present and configure it to access the COS service using the COS service credentials secret <code>cos-write-access</code> that you created in the previous section.</p>
+</li>
+<li>
+<p>Open file <code>provisioner-sa.yaml</code> in a editor.</p>
+<div class="highlight"><pre><span></span><code>vi provisioner-sa.yaml
+</code></pre></div>
+</li>
+<li>
+<p>Search for content <code>ibmcloud-object-storage-secret-reader</code> in the file. To move to the right section in the file, in the <code>vi</code> editor,</p>
+</li>
+<li>Type colon <code>:</code></li>
+<li>Type <code>/ibmcloud-object-storage-secret-reader</code></li>
+<li>
+<p>Press <code>&lt;ENTER&gt;</code> key</p>
+</li>
+<li>
+<p>Find the section below in the <code>vi</code> editor. It's a few lines down.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">rules</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="nt">apiGroups</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+    <span class="nt">resources</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
+    <span class="c1">#resourceNames: [&quot;&quot;]</span>
+</code></pre></div>
+</li>
+<li>
+<p>Use the <code>&lt;i&gt;</code> key to change to <code>Insert</code> mode in vim, uncomment the line and change the section to set the secret to <code>cos-write-access</code> and allow access to the COS instance,</p>
+<div class="highlight"><pre><span></span><code><span class="nt">rules</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="nt">apiGroups</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+    <span class="nt">resources</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
+    <span class="nt">resourceNames</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;cos-write-access&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+</li>
+<li>
+<p>Save the change and quit the <code>vi</code> editor.</p>
+</li>
+<li>Press <code>&lt;ESC&gt;</code> key</li>
+<li>Type <code>:wq</code></li>
+<li>Press <code>&lt;ENTER&gt;</code> key</li>
+</ol>
+<p>Now, install the configured storage classes for <code>IBM Cloud Object Storage</code>,</p>
+<ol>
+<li>
+<p>In the <code>Cloud Shell</code>, navigate back to the user root folder.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$HOME</span>
+</code></pre></div>
+</li>
+<li>
+<p>Install the configured storage classes for <code>IBM Cloud Object Storage</code>, which will use the edited template file.</p>
+<div class="highlight"><pre><span></span><code>$ helm ibmc install ibm-object-storage-plugin ./ibm-object-storage-plugin
+
+Helm version: v3.2.0+ge11b7ce
+Installing the Helm chart...
+PROVIDER: CLASSIC
+DC: hou02
+Chart: ./ibm-object-storage-plugin
+NAME: ibm-object-storage-plugin
+LAST DEPLOYED: Sat May <span class="m">23</span> <span class="m">17</span>:45:25 <span class="m">2020</span>
+NAMESPACE: default
+STATUS: deployed
+REVISION: <span class="m">1</span>
+NOTES:
+Thank you <span class="k">for</span> installing: ibm-object-storage-plugin.   Your release is named: ibm-object-storage-plugin
+</code></pre></div>
+</li>
+<li>
+<p>Verify that the storage classes are created successfully.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get storageclass <span class="p">|</span> grep <span class="s1">&#39;ibmc-s3fs&#39;</span>
+
+ibmc-s3fs-cold-cross-region            ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-cold-regional                ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-flex-cross-region            ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-flex-perf-cross-region       ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-flex-perf-regional           ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-flex-regional                ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-standard-cross-region        ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-standard-perf-cross-region   ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-standard-perf-regional       ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-standard-regional            ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-vault-cross-region           ibm.io/ibmc-s3fs   43h
+ibmc-s3fs-vault-regional               ibm.io/ibmc-s3fs   43h
+</code></pre></div>
+</li>
+<li>
+<p>Verify that plugin pods are in "Running" state and indicate <code>READY</code> state of <code>1/1</code>:</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get pods -n kube-system -o wide <span class="p">|</span> grep object
+
+ibmcloud-object-storage-driver-jwbcw                  <span class="m">1</span>/1     Running   <span class="m">0</span>          43h    <span class="m">10</span>.185.199.31    <span class="m">10</span>.185.199.31   &lt;none&gt;           &lt;none&gt;
+ibmcloud-object-storage-plugin-654fc7cd86-kcs8n       <span class="m">1</span>/1     Running   <span class="m">0</span>          43h    <span class="m">172</span>.30.194.209   <span class="m">10</span>.185.199.31   &lt;none&gt;           &lt;none&gt;
+</code></pre></div>
+<p>If the pods are not <code>READY</code> and indicate <code>0/1</code> then wait and re-run the command until the <code>READY</code> state says <code>1/1</code>.</p>
+<p>The installation is successful when one <code>ibmcloud-object-storage-plugin</code> pod and one or more <code>ibmcloud-object-storage-driver</code> pods are in <code>running</code> state.</p>
+<p>The number of <code>ibmcloud-object-storage-driver</code> pods equals the number of worker nodes in your cluster. All pods must be in a <code>Running</code> state for the plug-in to function properly. If the pods fail, run <code>kubectl describe pod -n kube-system &lt;pod_name&gt;</code> to find the root cause for the failure.</p>
+</li>
+<li>
+<p>Execute the command below until all pods are in <code>Running</code> state with <code>1/1</code>.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get pods -n kube-system -o wide <span class="p">|</span> grep object
+
+ibmcloud-object-storage-driver-jwbcw                  <span class="m">1</span>/1     Running   <span class="m">0</span>          43h    <span class="m">10</span>.185.199.31    <span class="m">10</span>.185.199.31   &lt;none&gt;           &lt;none&gt;
+ibmcloud-object-storage-plugin-654fc7cd86-kcs8n       <span class="m">1</span>/1     Running   <span class="m">0</span>          43h    <span class="m">172</span>.30.194.209   <span class="m">10</span>.185.199.31   &lt;none&gt;           &lt;none&gt;
+</code></pre></div>
+</li>
+</ol>
+<h3 id="review-the-object-storage-configuration">Review the Object Storage Configuration<a class="headerlink" href="#review-the-object-storage-configuration" title="Permanent link">&para;</a></h3>
+<p>IBM Cloud Kubernetes Service provides pre-defined storage classes that you can use to create buckets with a specific configuration.</p>
+<ol>
+<li>
+<p>List available storage classes in IBM Cloud Kubernetes Service.</p>
+<div class="highlight"><pre><span></span><code>kubectl get storageclasses <span class="p">|</span> grep s3
+</code></pre></div>
+<p>The Lite service plan for Cloud Object Storage includes Regional and Cross Regional resiliency, flexible data classes, and built in security. For the sample application, I will choose the <code>standard</code> and <code>regional</code> options in the <code>ibmc-s3fs-standard-regional</code> storageclass that is typical for web or mobile apps and we don't need cross-regional resilience beyond resilience per zones for our workshop app, but the options to choose for usage strategies and therefor the pricing of storageclasses for the bucket is very granular.</p>
+</li>
+<li>
+<p>Review the detailed IBM Cloud Object Storage bucket configuration for a storage class.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl describe storageclass ibmc-s3fs-standard-regional
+
+Name:                  ibmc-s3fs-standard-regional
+IsDefaultClass:        No
+Annotations:           meta.helm.sh/release-name<span class="o">=</span>ibm-object-storage-plugin,meta.helm.sh/release-namespace<span class="o">=</span>default
+Provisioner:           ibm.io/ibmc-s3fs
+Parameters:            ibm.io/chunk-size-mb<span class="o">=</span><span class="m">16</span>,ibm.io/curl-debug<span class="o">=</span>false,ibm.io/debug-level<span class="o">=</span>warn,ibm.io/iam-endpoint<span class="o">=</span>https://iam.bluemix.net,ibm.io/kernel-cache<span class="o">=</span>true,ibm.io/multireq-max<span class="o">=</span><span class="m">20</span>,ibm.io/object-store-endpoint<span class="o">=</span>NA,ibm.io/object-store-storage-class<span class="o">=</span>NA,ibm.io/parallel-count<span class="o">=</span><span class="m">2</span>,ibm.io/s3fs-fuse-retry-count<span class="o">=</span><span class="m">5</span>,ibm.io/stat-cache-size<span class="o">=</span><span class="m">100000</span>,ibm.io/tls-cipher-suite<span class="o">=</span>AESGCM
+AllowVolumeExpansion:  &lt;unset&gt;
+MountOptions:          &lt;none&gt;
+ReclaimPolicy:         Delete
+VolumeBindingMode:     Immediate
+Events:                &lt;none&gt;
+</code></pre></div>
+<p>Additional information is available at <a href="https://cloud.ibm.com/docs/containers?topic=containers-object_storage#configure_cos">https://cloud.ibm.com/docs/containers?topic=containers-object_storage#configure_cos</a>.</p>
+</li>
+</ol>
+<h3 id="create-bucket">Create Bucket<a class="headerlink" href="#create-bucket" title="Permanent link">&para;</a></h3>
+<p>Data in the <code>IBM Cloud Object Storage</code> is stored and organized in so-called <code>buckets</code>. To create a new <code>bucket</code> in your <code>IBM Cloud Object Storage</code> service instance,</p>
+<ol>
+<li>
+<p>In the <code>Cloud Shell</code> in the session logged in to the account that owns the Cloud Object Storage instance, assign a name to the new bucket.  The bucket name MUST be globally unique in the IBM Cloud. A simple way to ensure this is to use a random hash or your username as part of the name. If the bucket name is not globally unique, the command in the next step will fail.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">COS_BUCKET</span><span class="o">=</span>&lt;username&gt;-bucket-lab2
+</code></pre></div>
+</li>
+<li>
+<p>Create a new bucket.</p>
+<div class="highlight"><pre><span></span><code>$ ibmcloud cos create-bucket --ibm-service-instance-id <span class="nv">$COS_GUID</span> --class Standard --bucket <span class="nv">$COS_BUCKET</span>
+
+OK
+Details about bucket &lt;username&gt;-bucket-lab2:
+Region: us-south
+Class: Standard
+</code></pre></div>
+</li>
+<li>
+<p>Verify the new bucket was created successfully.</p>
+<div class="highlight"><pre><span></span><code>$ ibmcloud cos list-buckets --ibm-service-instance-id <span class="nv">$COS_GUID</span>
+
+OK
+<span class="m">1</span> bucket found <span class="k">in</span> your account:
+
+Name    Date Created
+&lt;username&gt;-bucket-lab2    May <span class="m">29</span>, <span class="m">2020</span> at <span class="m">21</span>:22:37
+</code></pre></div>
+</li>
+<li>
+<p>Get your object storage configurations,</p>
+<div class="highlight"><pre><span></span><code>$ ibmcloud cos config list
+Key                     Value
+Last Updated
+Default Region          us-south
+Download Location       /home/remkohdev/Downloads
+CRN
+AccessKeyID
+SecretAccessKey
+Authentication Method   IAM
+URL Style               VHost
+</code></pre></div>
+<p>This will list your default region.</p>
+<p>To list your bucket's location use</p>
+<div class="highlight"><pre><span></span><code>$ ibmcloud cos get-bucket-location --bucket <span class="nv">$COS_BUCKET</span>
+OK
+Details about bucket remkohdev123-bucket-lab2:
+Region: us-south
+Class: Standard
+</code></pre></div>
+<p>With your bucket's location, e.g. <code>us-south</code>, you can find your bucket's private endpoint here <a href="https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints#advanced-endpoint-types">https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints#advanced-endpoint-types</a>, OR in the following steps you find it in your Cloud Object Storage's bucket configuration.</p>
+</li>
+<li>
+<p>In a browser, navigate to <a href="https://cloud.ibm.com/resources">https://cloud.ibm.com/resources</a>.</p>
+</li>
+<li>
+<p>Expand the Storage section .</p>
+</li>
+<li>
+<p>Locate and select your IBM Cloud Object Storage service instance.</p>
+</li>
+<li>
+<p>In the left menu, select the <code>buckets</code> section Select your new <code>bucket</code> in the <code>Buckets</code> tab.</p>
+</li>
+<li>
+<p>Select the <code>Configuration</code> tab under <code>Buckets</code> iin the left pane.</p>
+<p><img alt="cos" src="../assets/images/cos-04.png" /></p>
+</li>
+<li>
+<p>Take note of the <code>Private</code> endpoint.</p>
+</li>
+<li>
+<p>For your convenience, store the information in environment variable. In the Cloud Shell,</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">PRIVATE_ENDPOINT</span><span class="o">=</span>s3.private.us-south.cloud-object-storage.appdomain.cloud
+</code></pre></div>
+<blockquote>
+<p>Note: replace the endpoint with the one that you identied in the previous setp.</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="create-the-persistentvolumeclaim">Create the PersistentVolumeClaim<a class="headerlink" href="#create-the-persistentvolumeclaim" title="Permanent link">&para;</a></h2>
+<p>Depending on the settings that you choose in your PVC, you can provision IBM Cloud Object Storage in the following ways:</p>
+<ul>
+<li><a href="https://cloud.ibm.com/docs/containers?topic=containers-kube_concepts#dynamic_provisioning">Dynamic provisioning</a>: When you create the PVC, the matching persistent volume (PV) and the bucket in your IBM Cloud Object Storage service instance are automatically created.</li>
+<li><a href="https://cloud.ibm.com/docs/containers?topic=containers-kube_concepts#static_provisioning">Static provisioning</a>: You can reference an existing bucket in your IBM Cloud Object Storage service instance in your PVC. When you create the PVC, only the matching PV is automatically created and linked to your existing bucket in IBM Cloud Object Storage.</li>
+</ul>
+<p>In this exercise, you are going to use an existing bucket when assigning persistant storage to IKS container.</p>
+<ol>
+<li>
+<p>In the cloud shell connected to your cluster, create a <code>PersistentVolumeClaim</code> configuration file.</p>
+<blockquote>
+<p>Note: Replace the values for:
+  - <code>ibm.io/bucket</code>,
+  - <code>ibm.io/secret-name</code> and
+  - <code>ibm.io/endpoint</code>.</p>
+</blockquote>
+<p>If your values are not exactly matching with the bucket name you created, the secret name you created and the private endpoint of your bucket, the PVC will remain in state pending and fail to create.</p>
+<blockquote>
+<p>Note: The <code>secret-name</code> should be set to <code>cos-write-access</code> unless you changed the name of the secret we created earlier,
+Note: <code>ibm.io/endpoint</code> should be set to the output of command <code>echo "https://$PRIVATE_ENDPOINT"</code>
+Create the file first and then edit the file with <code>vi</code> if changes are needed,</p>
+</blockquote>
+</li>
+<li>
+<p>Create the file,</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">echo</span> <span class="s1">&#39;kind: PersistentVolumeClaim</span>
+<span class="s1">apiVersion: v1</span>
+<span class="s1">metadata:</span>
+<span class="s1">    name: my-iks-pvc</span>
+<span class="s1">    namespace: default</span>
+<span class="s1">    annotations:</span>
+<span class="s1">        ibm.io/auto-create-bucket: &quot;false&quot;</span>
+<span class="s1">        ibm.io/auto-delete-bucket: &quot;false&quot;</span>
+<span class="s1">        ibm.io/bucket: &quot;&lt;your-cos-bucket&gt;&quot;</span>
+<span class="s1">        ibm.io/secret-name: &quot;cos-write-access&quot;</span>
+<span class="s1">        ibm.io/endpoint: &quot;https://s3.private.us-south.cloud-object-storage.appdomain.cloud&quot;</span>
+<span class="s1">spec:</span>
+<span class="s1">    accessModes:</span>
+<span class="s1">        - ReadWriteOnce</span>
+<span class="s1">    resources:</span>
+<span class="s1">        requests:</span>
+<span class="s1">            storage: 8Gi</span>
+<span class="s1">    storageClassName: ibmc-s3fs-standard-regional&#39;</span> &gt; my-iks-pvc.yaml
+</code></pre></div>
+</li>
+<li>
+<p>Edit the file and set the right values if changes are still needed,</p>
+<div class="highlight"><pre><span></span><code>vi my-iks-pvc.yaml
+</code></pre></div>
+</li>
+<li>
+<p>Create a <code>PersistentVolumeClaim</code>.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl apply -f my-iks-pvc.yaml
+
+persistentvolumeclaim/my-iks-pvc created
+</code></pre></div>
+</li>
+<li>
+<p>Verify the <code>PersistentVolumeClaim</code> and through the PVC also the <code>PersistentVolume</code> or PV was created successfully and that the PVC has <code>STATUS</code> of <code>Bound</code>.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get pvc
+
+NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                  AGE
+my-iks-pvc   Bound    pvc-1a1f4bce-a8fe-4bd8-a160-f9268af2d18a   8Gi        RWO            ibmc-s3fs-standard-regional   4s
+</code></pre></div>
+<blockquote>
+<p>Note: If the state of the PVC remains <code>Pending</code>, you can inspect the error for why the PVC remains pending by using the <code>describe</code> command: <code>kubectl describe pvc &lt;pvc_name&gt;</code>. For example, <code>kubectl describe pvc my-iks-pvc</code>.
+Note: If the state of the PVC stays as <code>Pending</code>, the problem must be resolved before you move to the next step.</p>
+</blockquote>
+</li>
+<li>
+<p>Verify a new <code>PersistentVolume</code> was also created successfully.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get pv
+
+NAME    CAPACITY    ACCESS MODES    RECLAIM POLICY    STATUS    CLAIM    STORAGECLASS    REASON    AGE
+pvc-1a1f4bce-a8fe-4bd8-a160-f9268af2d18a    8Gi    RWO    Delete    Bound     default/my-iks-pvc    ibmc-s3fs-standard-regional    74s
+</code></pre></div>
+</li>
+</ol>
+<p>You're now ready to persistly store data on the IBM Cloud Object Storage within your containers in IKS clusters.</p>
+<h3 id="deploy-mongodb-to-iks-cluster-and-persist-its-datastore-in-ibm-cloud-object-storage">Deploy MongoDB to IKS Cluster and Persist its Datastore in IBM Cloud Object Storage<a class="headerlink" href="#deploy-mongodb-to-iks-cluster-and-persist-its-datastore-in-ibm-cloud-object-storage" title="Permanent link">&para;</a></h3>
+<p>In this section, you are going to deploy an instance of MongoDB to your IKS cluster and persistly store data on the IBM Cloud Object Storage.</p>
+<ol>
+<li>
+<p>We will skip this step, but if you want to configure the MongoDB via a <code>values.yaml</code> file, or want to review the default values of the Helm chart, in the <code>Cloud Shell</code>, download the default <code>values.yaml</code> file from the bitnami/mongodb Helm chart, which is used to configure and deploy the MongoDB Helm chart. In this lab we will overwrite the values from the commandline when we install the chart.</p>
+<div class="highlight"><pre><span></span><code>wget https://raw.githubusercontent.com/bitnami/charts/master/bitnami/mongodb/values.yaml
+</code></pre></div>
+</li>
+<li>
+<p>We will skip this step also, but if you want to review the configuration options, open the <code>values.yaml</code> file in a file editor and review the parameters that can be modified during mongdb deployment. In this exercise however, you'll overwrite the default values using Helm command parameters instead of a <code>values.yaml</code> file.</p>
+</li>
+<li>
+<p>Add the bitnami Helm repository.</p>
+<div class="highlight"><pre><span></span><code>$ helm repo add bitnami https://charts.bitnami.com/bitnami
+
+<span class="s2">&quot;bitnami&quot;</span> has been added to your repositories
+
+$ helm repo update
+</code></pre></div>
+</li>
+<li>
+<p>Install MongoDB using helm with parameters, the flag <code>persistence.enabled=true</code> will enable storing your data to a PersistentVolume.</p>
+<div class="highlight"><pre><span></span><code>$ helm install mongodb bitnami/mongodb --set persistence.enabled<span class="o">=</span><span class="nb">true</span> --set persistence.existingClaim<span class="o">=</span>my-iks-pvc --set livenessProbe.initialDelaySeconds<span class="o">=</span><span class="m">180</span> --set <span class="nv">mongodbRootPassword</span><span class="o">=</span>passw0rd --set <span class="nv">mongodbUsername</span><span class="o">=</span>user1 --set <span class="nv">mongodbPassword</span><span class="o">=</span>passw0rd --set <span class="nv">mongodbDatabase</span><span class="o">=</span>mydb --set service.type<span class="o">=</span>ClusterIP
+
+NAME: mongodb
+LAST DEPLOYED: Sat May <span class="m">23</span> <span class="m">21</span>:04:44 <span class="m">2020</span>
+NAMESPACE: default
+STATUS: deployed
+REVISION: <span class="m">1</span>
+TEST SUITE: None
+NOTES:
+** Please be patient <span class="k">while</span> the chart is being deployed **
+
+MongoDB can be accessed via port <span class="m">27017</span> on the following DNS name from within your cluster:
+    mongodb.default.svc.cluster.local
+
+To get the root password run:
+
+    <span class="nb">export</span> <span class="nv">MONGODB_ROOT_PASSWORD</span><span class="o">=</span><span class="k">$(</span>kubectl get secret --namespace default mongodb -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.mongodb-root-password}&quot;</span> <span class="p">|</span> base64 --decode<span class="k">)</span>
+
+To get the password <span class="k">for</span> <span class="s2">&quot;my-user&quot;</span> run:
+
+    <span class="nb">export</span> <span class="nv">MONGODB_PASSWORD</span><span class="o">=</span><span class="k">$(</span>kubectl get secret --namespace default mongodb -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.mongodb-password}&quot;</span> <span class="p">|</span> base64 --decode<span class="k">)</span>
+
+To connect to your database run the following command:
+
+    kubectl run --namespace default mongodb-client --rm --tty -i --restart<span class="o">=</span><span class="s1">&#39;Never&#39;</span> --image docker.io/bitnami/mongodb:4.2.7-debian-10-r0 --command -- mongo admin --host mongodb --authenticationDatabase admin -u root -p <span class="nv">$MONGODB_ROOT_PASSWORD</span>
+
+To connect to your database from outside the cluster execute the following commands:
+
+    kubectl port-forward --namespace default svc/mongodb <span class="m">27017</span>:27017 <span class="p">&amp;</span> mongo --host <span class="m">127</span>.0.0.1 --authenticationDatabase admin -p <span class="nv">$MONGODB_ROOT_PASSWORD</span>
+</code></pre></div>
+</li>
+<li>
+<p>Note: if you used the same cluster for lab1 and lab2, then you can uninstall the existing <code>MongoDB</code> instance from lab1 by typing <code>helm uninstall mongodb</code>. Wait a few minutes, to give Kubernetes time to terminate all resources associated with the chart.</p>
+</li>
+<li>
+<p>Note, the service type for MongoDB is set to <code>ClusterIP</code> with the Helm parameter <code>--set service.type=ClusterIP</code>, so that MongoDB can only be accessed within the cluster.</p>
+</li>
+<li>
+<p>Retrieve and save MongoDB passwords in environment variables.</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nb">export</span> <span class="nv">MONGODB_ROOT_PASSWORD</span><span class="o">=</span><span class="k">$(</span>kubectl get secret --namespace default mongodb -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.mongodb-root-password}&quot;</span> <span class="p">|</span> base64 --decode<span class="k">)</span>
+
+$ <span class="nb">export</span> <span class="nv">MONGODB_PASSWORD</span><span class="o">=</span><span class="k">$(</span>kubectl get secret --namespace default mongodb -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.mongodb-password}&quot;</span> <span class="p">|</span> base64 --decode<span class="k">)</span>
+
+$ <span class="nb">echo</span> <span class="nv">$MONGODB_ROOT_PASSWORD</span>
+passw0rd
+
+$ <span class="nb">echo</span> <span class="nv">$MONGODB_PASSWORD</span>
+passw0rd
+</code></pre></div>
+</li>
+<li>
+<p>Verify the MongoDB deployment.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get deployment
+
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+mongodb   <span class="m">1</span>/1     <span class="m">1</span>            <span class="m">1</span>           6m30s
+</code></pre></div>
+<blockquote>
+<p>Note: It may take several minutes until the deployment is completed and the container initialized, wait till the <code>READY</code> state is <code>1/1</code>.</p>
+</blockquote>
+</li>
+<li>
+<p>Verify that pods are running.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get pod
+
+NAME                      READY   STATUS    RESTARTS   AGE
+mongodb-9f76c9485-sjtqx   <span class="m">1</span>/1     Running   <span class="m">0</span>          5m40s
+</code></pre></div>
+<blockquote>
+<p>Note: It may take a few minutes until the deployment is completed and pod turns to <code>Running</code> state.</p>
+</blockquote>
+</li>
+<li>
+<p>Verify that the internal MongoDB port 27017 within the container is not exposed externally,</p>
+<div class="highlight"><pre><span></span><code>$  kubectl get svc mongodb
+NAME    TYPE    CLUSTER-IP    EXTERNAL-IP    PORT<span class="o">(</span>S<span class="o">)</span>    AGE
+mongodb    ClusterIP    <span class="m">172</span>.21.131.154   &lt;none&gt;    <span class="m">27017</span>/TCP    41s
+</code></pre></div>
+</li>
+</ol>
+<h3 id="verify-mongodb-deployment">Verify MongoDB Deployment<a class="headerlink" href="#verify-mongodb-deployment" title="Permanent link">&para;</a></h3>
+<p>To verify MongoDB deployment,</p>
+<ol>
+<li>
+<p>In <code>Cloud Shell</code>, retrieve pod ID.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get pod
+
+NAME    READY    STATUS    RESTARTS    AGE
+mongodb-9f76c9485-sjtqx    <span class="m">1</span>/1    Running    <span class="m">0</span>    5m40s
+</code></pre></div>
+</li>
+<li>
+<p>Start an interactive terminal to the pod, you need to use your own unique pod name with the hashes.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl <span class="nb">exec</span> -it &lt;your pod name&gt; bash
+
+I have no name!@&lt;your pod name&gt;:/$
+</code></pre></div>
+</li>
+<li>
+<p>Start a MongoDB CLI session.</p>
+<div class="highlight"><pre><span></span><code>$ mongo --host <span class="m">127</span>.0.0.1 --authenticationDatabase admin -p <span class="nv">$MONGODB_ROOT_PASSWORD</span>
+
+MongoDB shell version v4.2.7
+connecting to: mongodb://127.0.0.1:27017/?authSource<span class="o">=</span>admin<span class="p">&amp;</span><span class="nv">compressors</span><span class="o">=</span>disabled<span class="p">&amp;</span><span class="nv">gssapiServiceName</span><span class="o">=</span>mongodb
+Implicit session: session <span class="o">{</span> <span class="s2">&quot;id&quot;</span> : UUID<span class="o">(</span><span class="s2">&quot;a638b7d1-d00d-4de2-954b-ee6309c251b2&quot;</span><span class="o">)</span> <span class="o">}</span>
+MongoDB server version: <span class="m">4</span>.2.7
+Welcome to the MongoDB shell.
+For interactive help, <span class="nb">type</span> <span class="s2">&quot;help&quot;</span>.
+For more comprehensive documentation, see
+    http://docs.mongodb.org/
+Questions? Try the support group
+    http://groups.google.com/group/mongodb-user
+<span class="m">2020</span>-05-30T04:27:20.416+0000 I  STORAGE  <span class="o">[</span>main<span class="o">]</span> In File::open<span class="o">()</span>, ::open <span class="k">for</span> <span class="s1">&#39;//.mongorc.js&#39;</span> failed with Permission denied
+&gt;
+</code></pre></div>
+</li>
+<li>
+<p>Switch to your database.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span> <span class="n">use</span> <span class="n">mydb</span>
+
+<span class="n">switched</span> <span class="k">to</span> <span class="n">db</span> <span class="n">mydb</span>
+</code></pre></div>
+</li>
+<li>
+<p>Authenticate a MongoDB connection.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span> <span class="n">db</span><span class="p">.</span><span class="n">auth</span><span class="p">(</span><span class="ss">&quot;user1&quot;</span><span class="p">,</span> <span class="ss">&quot;passw0rd&quot;</span><span class="p">)</span>
+<span class="mi">1</span>
+</code></pre></div>
+</li>
+<li>
+<p>Create a <code>collection</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span> <span class="n">db</span><span class="p">.</span><span class="n">createCollection</span><span class="p">(</span><span class="ss">&quot;customer&quot;</span><span class="p">)</span>
+
+<span class="err">{</span> <span class="ss">&quot;ok&quot;</span> <span class="p">:</span> <span class="mi">1</span> <span class="err">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>Verify the collection creation.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span> <span class="n">db</span><span class="p">.</span><span class="n">getCollection</span><span class="p">(</span><span class="s1">&#39;customer&#39;</span><span class="p">)</span>
+
+<span class="n">mydb</span><span class="p">.</span><span class="n">customer</span>
+</code></pre></div>
+</li>
+<li>
+<p>Create one data entry in MongoDB.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span> <span class="n">db</span><span class="p">.</span><span class="n">customer</span><span class="p">.</span><span class="n">insertOne</span><span class="p">(</span> <span class="err">{</span> <span class="n">firstName</span><span class="p">:</span> <span class="ss">&quot;John&quot;</span><span class="p">,</span> <span class="n">lastName</span><span class="p">:</span> <span class="ss">&quot;Smith&quot;</span> <span class="err">}</span> <span class="p">)</span>
+
+<span class="err">{</span>
+    <span class="ss">&quot;acknowledged&quot;</span> <span class="p">:</span> <span class="k">true</span><span class="p">,</span>
+    <span class="ss">&quot;insertedId&quot;</span> <span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="ss">&quot;5ed1e4319bdb52022d624bdf&quot;</span><span class="p">)</span>
+<span class="err">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>Retrieve the data entry in the MongoDB.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span> <span class="n">db</span><span class="p">.</span><span class="n">customer</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="err">{</span> <span class="n">lastName</span><span class="p">:</span> <span class="ss">&quot;Smith&quot;</span> <span class="err">}</span><span class="p">)</span>
+
+<span class="err">{</span> <span class="ss">&quot;_id&quot;</span> <span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="ss">&quot;5ed1e4319bdb52022d624bdf&quot;</span><span class="p">),</span> <span class="ss">&quot;firstName&quot;</span> <span class="p">:</span> <span class="ss">&quot;John&quot;</span><span class="p">,</span> <span class="ss">&quot;lastName&quot;</span> <span class="p">:</span> <span class="ss">&quot;Smith&quot;</span> <span class="err">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>Type <code>exit</code> twice to back to the <code>Cloud Shell</code>.</p>
+</li>
+<li>
+<p>Your mongodb is now saving values, and if your Cloud Object Storage and bucket were configured correctly, your customer information is now securely stored.</p>
+</li>
+<li>
+<p>If you review the bucket in your Object Storage, MongoDB should now be writing its data files to the object storage.</p>
+<p><img alt="COS data files" src="../assets/images/ibmcloud-cos-bucket-datafiles.png" /></p>
+</li>
+<li>
+<p>Continue to <a href="../lab-03/">Lab 3</a> or go back to the <a href="../SUMMARY/">Summary</a>.</p>
+</li>
+</ol>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../lab-01/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Lab 1. Kubernetes Networking
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../lab-03/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Lab 3. Source-to-Image (S2I)
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2020 IBM Developer
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+        
+        
+      
+      <a href="https://github.com/ibm" target="_blank" rel="noopener" title="github.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://twitter.com/ibmdeveloper" target="_blank" rel="noopener" title="twitter.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://www.linkedin.com/company/ibm/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://www.youtube.com/user/developerworks" target="_blank" rel="noopener" title="www.youtube.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://dev.to/ibmdeveloper" target="_blank" rel="noopener" title="dev.to" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M120.12 208.29c-3.88-2.9-7.77-4.35-11.65-4.35H91.03v104.47h17.45c3.88 0 7.77-1.45 11.65-4.35 3.88-2.9 5.82-7.25 5.82-13.06v-69.65c-.01-5.8-1.96-10.16-5.83-13.06zM404.1 32H43.9C19.7 32 .06 51.59 0 75.8v360.4C.06 460.41 19.7 480 43.9 480h360.2c24.21 0 43.84-19.59 43.9-43.8V75.8c-.06-24.21-19.7-43.8-43.9-43.8zM154.2 291.19c0 18.81-11.61 47.31-48.36 47.25h-46.4V172.98h47.38c35.44 0 47.36 28.46 47.37 47.28l.01 70.93zm100.68-88.66H201.6v38.42h32.57v29.57H201.6v38.41h53.29v29.57h-62.18c-11.16.29-20.44-8.53-20.72-19.69V193.7c-.27-11.15 8.56-20.41 19.71-20.69h63.19l-.01 29.52zm103.64 115.29c-13.2 30.75-36.85 24.63-47.44 0l-38.53-144.8h32.57l29.71 113.72 29.57-113.72h32.58l-38.46 144.8z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.93c04032.min.js"></script>
+      <script src="../assets/javascripts/bundle.83e5331e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: ['navigation.tabs'],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.8c7e0a7e.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
